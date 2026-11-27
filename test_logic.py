@@ -207,6 +207,20 @@ CHECK = r"""
   out.push({tag: "ins-toggle-off", print: __els.insPrint.textContent,
     stored: localStorage.getItem("daemin_consult_insurance_v1")});
 
+  /* ---- 화재보험 · 실손의료비보험 (신규 2종) ---- */
+  var cFire = pressIns("화재보험");
+  var cMedi = pressIns("실손의료비보험");
+  out.push({tag: "ins-new-2",
+    found: !!(cFire && cMedi),
+    pressed: [cFire && cFire.getAttribute("aria-pressed"), cMedi && cMedi.getAttribute("aria-pressed")],
+    cls: [cFire && cFire.className, cMedi && cMedi.className],
+    print: __els.insPrint.textContent,
+    stored: localStorage.getItem("daemin_consult_insurance_v1")});
+  pressIns("화재보험"); pressIns("실손의료비보험");
+  out.push({tag: "ins-new-2-toggle-off", print: __els.insPrint.textContent,
+    stored: localStorage.getItem("daemin_consult_insurance_v1")});
+  pressIns("암보험"); pressIns("실손의료비보험");
+
   /* ---- 궁금하신 사항 ---- */
   __els.questions.value = "5세대 실손 전환 조건과 보장 공백이 궁금합니다";
   __els.questions.fire("input");
@@ -397,7 +411,7 @@ SEND_CHECK = r"""
   __els.questions.value = "5세대 실손 전환 상담 요청";
   for (var i = 0; i < __els.insChips.childs.length; i++){
     var lab = __els.insChips.childs[i].textContent;
-    if (lab === "암보험" || lab === "보장점검") __els.insChips.childs[i].fire("click");
+    if (lab === "암보험" || lab === "보장점검" || lab === "실손의료비보험") __els.insChips.childs[i].fire("click");
   }
   __els.merPM.fire("click");
   __els.hourSel.value = "3"; __els.hourSel.fire("change");
@@ -446,8 +460,19 @@ assert 'id="clientName"' in html and '<label class="f-label" for="clientName">�
     "03번 성함 칸(라벨 '성함')이 없습니다"
 assert 'placeholder="자유롭게 기재해주세요"' in html, "궁금하신 사항 placeholder가 없습니다"
 for label in ["종합보험", "암보험", "뇌/심장보험", "수술비보험", "상해보험", "간병보험",
-              "치매재가보험", "치아보험", "펫보험", "종신보험", "연금보험", "보장점검", "기타"]:
+              "치매재가보험", "치아보험", "펫보험", "종신보험", "연금보험", "보장점검",
+              "화재보험", "실손의료비보험", "기타"]:
     assert '"%s"' % label in code, "상담보험 항목 누락: %s" % label
+
+# 상담보험 15종: 화재보험·실손의료비보험 포함, 기타는 마지막
+_ins = re.search(r'var INSURANCES = \[(.*?)\];', code, re.S)
+assert _ins, "INSURANCES 배열을 찾을 수 없습니다"
+labels15 = re.findall(r'"([^"]+)"', _ins.group(1))
+assert len(labels15) == 15, "상담보험 항목이 15종이 아닙니다: %d종 %s" % (len(labels15), labels15)
+assert labels15[-1] == "기타", "기타가 마지막 항목이 아닙니다: %s" % labels15
+for must in ("화재보험", "실손의료비보험"):
+    assert must in labels15, "상담보험 항목 누락: %s" % must
+assert len(set(labels15)) == len(labels15), "상담보험 항목에 중복이 있습니다: %s" % labels15
 for attr in ['data-mer="오전"', 'data-mer="오후"', 'data-min="00"', 'data-min="30"',
              'data-method="전화"', 'data-method="문자"', 'id="hourSel"']:
     assert attr in tpl, "연락가능시간/연락방법 컨트롤 누락: %s" % attr
@@ -465,6 +490,6 @@ assert "kdm320538@gmail.com" not in html, \
 print(json.dumps({"tag": "no-plain-email-in-page", "ok": True, "endpoint": "formsubmit 별칭"},
                  ensure_ascii=False))
 print(json.dumps({"tag": "html-checks", "ok": True, "checks": [
-    "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 13항목",
+    "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 15항목(화재·실손 포함)",
     "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 4개 한국어 필드"]},
     ensure_ascii=False))
