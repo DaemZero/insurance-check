@@ -6,19 +6,37 @@
 - 적정 보험료 범위(기본 월 소득의 7~10%) 대비 초과·여력 진단
 - 소득 대비 지출 구성 도넛 차트, 현재 보험료 비교 바, 1년·10년 환산 금액
 - 상담 메모(브라우저에만 저장), 인쇄·PDF 저장
+- 카톡·문자 링크 미리보기(og:image)와 파비콘
 
-단일 `index.html` 파일이며 외부 라이브러리·폰트·이미지 요청이 없습니다(사진은 base64 인라인).
+주소: https://daemzero.github.io/insurance-check/
+
+## 파일
+
+| 파일 | 쓰임 |
+| --- | --- |
+| `index.template.html` | 편집하는 원본 HTML (사진은 `__PHOTO_DATA_URI__` 자리표시자) |
+| `index.html` | `build.py`가 만든 배포본 — 직접 고치지 마세요 |
+| `build.py` | 사진 리사이즈·base64 인라인 → `index.html` + `downloads/2026-11-27/지출_적정보험료_진단.html` |
+| `make_brand_assets.py` | `og-image.png`(1200×630), `favicon.png`, `apple-touch-icon.png`, 사진 썸네일 생성 |
+| `assets/photo_card.png` | 명함 사진 원본 554×680 (저장소 안에서 관리) |
+| `assets/photo_card_240.webp` | 표시 크기의 2.5배 리사이즈본 — 빌드가 매번 다시 만듭니다 |
+| `test_logic.py` | 계산·표시 로직과 인쇄 안내 동작을 DOM 스텁에서 검증 |
+| `deploy.sh` | main·gh-pages 푸시 → 저장소 설명/홈페이지 설정 → 200 확인 |
 
 ## 수정·배포 방법
 
-1. `index.template.html`를 고칩니다.
-2. `python3 build.py` — 사진(base64)이 인라인된 `index.html`과 `downloads/2026-11-27/지출_적정보험료_진단.html`을 다시 만듭니다.
-3. `python3 test_logic.py` — 계산·표시 로직을 DOM 스텁에서 검증합니다.
-4. 커밋 후 두 브랜치에 push (GitHub Pages가 `gh-pages` 브랜치를 바라보고 있습니다):
+1. `index.template.html`을 고칩니다. (사진을 바꿀 때는 `assets/photo_card.png` 교체)
+2. `python3 build.py` — 사진(WebP 240×288, 약 5KB)과 파비콘을 인라인한 `index.html`(약 60KB)을 만듭니다.
+3. `python3 test_logic.py` — 계산·표시 로직을 검증합니다.
+4. `./deploy.sh` — `git push origin main`, `git push origin main:gh-pages`를 함께 수행합니다.
+   GitHub Pages가 `gh-pages` 브랜치를 바라보고 있어 두 브랜치 모두 올려야 실제 주소에 반영됩니다.
 
-```
-git push origin main
-git push origin main:gh-pages
+```bash
+python3 build.py && python3 test_logic.py && ./deploy.sh
 ```
 
-주소: https://daemzero.github.io/insurance-check/
+## 참고
+
+- 단일 HTML 파일이며 페이지가 외부 라이브러리·폰트·이미지 요청을 하지 않습니다(사진·파비콘 모두 data URI 인라인). og:image만 링크 미리보기용 외부 URL입니다.
+- 인쇄는 A4 2장으로 떨어집니다(1장: 표지·입력·진단 결과 / 2장: 상담 메모·명함).
+- 카톡 등 앱 안의 브라우저에서는 `window.print()`가 막히므로, 인앱 감지 또는 `beforeprint` 미발생 시 "다른 브라우저로 열기" 안내가 버튼 아래에 표시됩니다.
