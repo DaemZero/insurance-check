@@ -227,7 +227,7 @@
     border:1px solid #7FBFAF;
   }
   .bar-marker{
-    position:absolute;top:-16px;bottom:-16px;width:3px;border-radius:2px;
+    position:absolute;top:-5px;bottom:-5px;width:3px;border-radius:2px;
     background:var(--coral);transform:translateX(-1.5px);
     box-shadow:0 0 0 2px #fff;
   }
@@ -237,7 +237,7 @@
     background:#FDF0EC;border:1px solid #F6D3C9;border-radius:7px;padding:2px 7px;
     font-variant-numeric:tabular-nums;
   }
-  .bar-axis{display:flex;justify-content:space-between;font-size:10.5px;color:#A6A092;font-weight:700;margin-top:6px;}
+  .bar-axis{display:flex;justify-content:space-between;font-size:10.5px;color:#A6A092;font-weight:700;margin-top:10px;}
   .compare-note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:12px 0 0;font-variant-numeric:tabular-nums;}
   .compare-note b{color:var(--teal-800);}
 
@@ -380,26 +380,52 @@
     .no-print{display:none !important;}
     .print-only{display:block !important;}
     .hero{
-      margin:0 0 10mm;padding:8mm 7mm;border-radius:0 0 6mm 6mm;
+      margin:0 0 4mm;padding:5mm 6mm;border-radius:0 0 5mm 5mm;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .hero h1{font-size:22pt;}
-    .hero-desc{font-size:9.5pt;}
+    .hero h1{font-size:18pt;margin-bottom:2mm;}
+    .hero-sub{font-size:9pt;margin-bottom:0;}
+    .hero-desc{display:none;}
+    .eyebrow{font-size:7.5pt;margin-bottom:2mm;}
     .card{
-      box-shadow:none;border:1px solid #DCD6C8;border-radius:4mm;
-      margin-bottom:6mm;padding:6mm;break-inside:avoid;
+      box-shadow:none;border:1px solid #DCD6C8;border-radius:3mm;
+      margin-bottom:4mm;padding:5mm;break-inside:avoid;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
+    .sec-head{margin-bottom:3mm;}
+    .sec-head h2{font-size:12.5pt;}
+    .sec-head p{font-size:8.5pt;}
     .status,.tile,.strip > div,.legend .dot,.bar-band,.bar-marker,.bar-marker span,.warn{
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .f-input{border:1px solid #DDD6C6;padding:0 4mm;}
-    .f-input input{font-size:13pt;padding:2mm 0;}
-    .status-amount{font-size:20pt;}
-    .tiles,.strip{break-inside:avoid;}
-    .breakdown{grid-template-columns:52mm 1fr;}
-    .strip b{font-size:10pt;}
-    .tile b{font-size:11pt;}
+    .fields{gap:2.5mm 4mm;}
+    .f-label{font-size:9pt;}
+    .f-input{border:1px solid #DDD6C6;padding:0 3mm;}
+    .f-input input{font-size:11pt;padding:1.4mm 0;}
+    .f-hint{font-size:7.5pt;}
+    .status{padding:3mm 3.5mm;margin-bottom:3mm;}
+    .status-amount{font-size:16pt;}
+    .status-desc{font-size:8.5pt;margin-top:2mm;}
+    .status-kicker{font-size:8pt;margin-bottom:1mm;}
+    .tiles{margin-bottom:4mm;gap:2mm;}
+    .tile{padding:2mm 1.5mm;}
+    .tile span{font-size:7.5pt;}
+    .tile b{font-size:10.5pt;}
+    .tile small{display:none;}
+    .block{margin-bottom:4mm;}
+    .sub-title{font-size:9.5pt;margin-bottom:1mm;}
+    .block-note{font-size:7.5pt;margin-bottom:2mm;}
+    .breakdown{grid-template-columns:40mm 1fr;gap:5mm;}
+    .donut-wrap{max-width:40mm;}
+    .donut-center span{font-size:14pt;}
+    .legend{gap:1.5mm;}
+    .legend li{font-size:8.5pt;}
+    .bar{padding-top:6mm;}
+    .compare-note{font-size:8.5pt;margin-top:2mm;}
+    .strip{margin-top:3mm;}
+    .strip > div{padding:2mm 1mm;}
+    .strip span{font-size:7pt;}
+    .strip b{font-size:8.5pt;}
     .namecard{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     textarea, input[type=text]{border:1px solid #DDD6C6 !important;background:#fff !important;}
     footer{font-size:8pt;padding-top:4mm;}
@@ -587,7 +613,7 @@
         <textarea id="memo" placeholder="상담 내용, 고객 요청, 다음 연락 일정 등을 적어 두세요." aria-label="상담 메모"></textarea>
       </div>
       <div class="memo-foot">
-        <span class="save-state" id="saveState">입력하면 자동 저장됩니다</span>
+        <span class="save-state no-print" id="saveState">입력하면 자동 저장됩니다</span>
         <div class="actions no-print" style="margin:0;">
           <button type="button" class="btn btn-ghost" id="clearMemoBtn">메모 지우기</button>
           <button type="button" class="btn btn-primary" id="printBtn">
