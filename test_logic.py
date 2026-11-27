@@ -55,7 +55,7 @@ var __ids = ["income","fixed","variable","saving","premium","resultCard","basisT
   "donut","donutPct","legend","barBand","barMarker","barMarkerLabel","compareNote",
   "strip","stripLabel","sMonth","sYear","sDecade","basisChip","rateMin","rateMax",
   "rateMinVal","rateMaxVal","clientName","questions","saveState","toast","printHead","printMemo",
-  "memoCard","insChips","insPrint","timePrint","methodPrint","hourSel","sendCard",
+  "memoCard","insChips","insPrint","timePrint","methodPrint","questionsPrint","hourSel","sendCard",
   "printHint","printHintText","printHintClose",
   "sendName","sendContact","sendConsent","sendBtn","sendStatus","sendStatusText",
   "resetBtn","clearMemoBtn","printBtn"];
@@ -212,7 +212,7 @@ CHECK = r"""
   __els.questions.fire("input");
   __els.printBtn.fire("click"); /* 입력 후 400ms 디바운스 저장 → 인쇄 버튼이 즉시 저장 */
   out.push({tag: "questions-saved", stored: localStorage.getItem("daemin_consult_questions_v1"),
-    printed: __printed});
+    print: __els.questionsPrint.textContent, printed: __printed});
 
   /* ---- 연락가능시간: 오전/오후 → 시 → 00/30분 ---- */
   out.push({tag: "hour-disabled-before-meridiem", disabled: __els.hourSel.disabled});
@@ -340,6 +340,7 @@ RESTORE_CHECK = r"""
     sendName: __els.sendName.value,
     questions: __els.questions.value,
     insPrint: __els.insPrint.textContent,
+    questionsPrint: __els.questionsPrint.textContent,
     insPressed: __els.insChips.childs.filter(function(b){ return b.getAttribute("aria-pressed") === "true"; })
       .map(function(b){ return b.textContent; }),
     hour: __els.hourSel.value,
@@ -450,7 +451,7 @@ for label in ["종합보험", "암보험", "뇌/심장보험", "수술비보험"
 for attr in ['data-mer="오전"', 'data-mer="오후"', 'data-min="00"', 'data-min="30"',
              'data-method="전화"', 'data-method="문자"', 'id="hourSel"']:
     assert attr in tpl, "연락가능시간/연락방법 컨트롤 누락: %s" % attr
-for token in ['id="insPrint"', 'id="timePrint"', 'id="methodPrint"']:
+for token in ['id="insPrint"', 'id="timePrint"', 'id="methodPrint"', 'id="questionsPrint"']:
     assert token in tpl, "인쇄용 요약 누락: %s" % token
 for field in ['"상담보험"', '"궁금하신 사항"', '"연락가능시간"', '"연락방법"']:
     assert field in code, "전송 payload 한국어 필드 누락: %s" % field
@@ -465,5 +466,5 @@ print(json.dumps({"tag": "no-plain-email-in-page", "ok": True, "endpoint": "form
                  ensure_ascii=False))
 print(json.dumps({"tag": "html-checks", "ok": True, "checks": [
     "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 13항목",
-    "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 3종", "payload 4개 한국어 필드"]},
+    "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 4개 한국어 필드"]},
     ensure_ascii=False))

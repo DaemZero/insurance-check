@@ -335,6 +335,7 @@
     .time-row select{flex:1 1 84px;}
   }
   .print-val{font-size:15px;font-weight:700;color:var(--ink);line-height:1.5;}
+  .qprint{display:none;}
   .memo-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;}
   .save-state{font-size:12px;font-weight:700;color:var(--muted);}
   .save-state.on{color:var(--teal-700);}
@@ -559,6 +560,13 @@
       padding:1.8mm 2.2mm;border-radius:1.8mm;line-height:1.45;
     }
     .memo-grid textarea{min-height:26mm;}
+    .memo-grid textarea{display:none !important;}
+    .qprint{
+      display:block !important;white-space:pre-wrap;word-break:break-word;
+      border:1px solid #DDD6C6;border-radius:1.8mm;background:#fff;
+      min-height:24mm;padding:1.8mm 2.2mm;font-size:10pt;line-height:1.45;color:#12211F;
+    }
+    #memoCard .f-label em{display:none !important;}
     .memo-row{grid-template-columns:1fr 1fr;gap:6mm;}
     .opt-chips, .seg, .time-row select{display:none !important;}
     .print-val{font-size:10pt;font-weight:800;color:#12211F;padding:1.6mm 0 0;}
@@ -780,12 +788,13 @@
         <div class="memo-block">
           <span class="f-label">상담보험 <em>복수 선택</em></span>
           <div class="opt-chips" id="insChips" role="group" aria-label="상담보험 선택 (복수 선택 가능)"></div>
-          <div class="print-only print-val" id="insPrint">상담보험 : 선택 없음</div>
+          <div class="print-only print-val" id="insPrint">선택 없음</div>
         </div>
 
         <div class="memo-block">
           <label class="f-label" for="questions">궁금하신 사항</label>
           <textarea id="questions" placeholder="자유롭게 기재해주세요" aria-label="궁금하신 사항"></textarea>
+          <div class="print-only qprint" id="questionsPrint"></div>
         </div>
 
         <div class="memo-row">
@@ -816,7 +825,7 @@
                 <button type="button" class="opt" data-min="30" aria-pressed="false">30분</button>
               </div>
             </div>
-            <div class="print-only print-val" id="timePrint">연락가능시간 : 미선택</div>
+            <div class="print-only print-val" id="timePrint">미선택</div>
           </div>
 
           <div class="memo-block">
@@ -825,7 +834,7 @@
               <button type="button" class="opt" data-method="전화" aria-pressed="false">전화</button>
               <button type="button" class="opt" data-method="문자" aria-pressed="false">문자</button>
             </div>
-            <div class="print-only print-val" id="methodPrint">연락방법 : 미선택</div>
+            <div class="print-only print-val" id="methodPrint">미선택</div>
           </div>
         </div>
       </div>
@@ -1281,7 +1290,7 @@
       b.className = "opt" + (on ? " on" : "");
     });
     var p = $("insPrint");
-    if (p) p.textContent = "상담보험 : " + (consult.ins.length ? consult.ins.join(" · ") : "선택 없음");
+    if (p) p.textContent = consult.ins.length ? consult.ins.join(" · ") : "선택 없음";
   }
 
   function syncPressed(nodes, attr, value){
@@ -1302,7 +1311,7 @@
     syncPressed(document.querySelectorAll("[data-mer]"), "data-mer", consult.mer);
     syncPressed(document.querySelectorAll("[data-min]"), "data-min", consult.minute);
     var p = $("timePrint");
-    if (p) p.textContent = "연락가능시간 : " + (timeText() || "미선택");
+    if (p) p.textContent = timeText() || "미선택";
   }
   function setMeridiem(v){
     consult.mer = (consult.mer === v ? "" : v);
@@ -1320,7 +1329,7 @@
   function syncMethod(){
     syncPressed(document.querySelectorAll("[data-method]"), "data-method", consult.method);
     var p = $("methodPrint");
-    if (p) p.textContent = "연락방법 : " + (consult.method || "미선택");
+    if (p) p.textContent = consult.method || "미선택";
   }
   function setMethod(v){
     consult.method = (consult.method === v ? "" : v);
@@ -1328,7 +1337,11 @@
   }
   function syncConsult(){
     if ($("clientName") && $("sendName")) syncName("clientName", "sendName");
-    syncInsurance(); syncTime(); syncMethod();
+    syncInsurance(); syncTime(); syncMethod(); syncQuestions();
+  }
+  function syncQuestions(){
+    var p = $("questionsPrint");
+    if (p) p.textContent = questionsValue();
   }
 
   /* ---------- persistence ---------- */
@@ -1429,6 +1442,7 @@
 
   var consultTimer;
   function onConsultInput(){
+    syncQuestions();
     clearTimeout(consultTimer);
     consultTimer = setTimeout(saveConsult, 400);
   }
