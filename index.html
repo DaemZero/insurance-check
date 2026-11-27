@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <meta name="theme-color" content="#134E4A">
-<title>월 지출 · 적정 보험료 진단 | 현대홈쇼핑GA 김대민</title>
+<title>내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진</title>
 <meta name="description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다. 현대홈쇼핑GA 금융플래너 김대민.">
 <link rel="canonical" href="https://daemzero.github.io/insurance-check/">
 
@@ -14,7 +14,7 @@
 
 <!-- 카톡·문자·SNS 링크 미리보기 -->
 <meta property="og:site_name" content="현대홈쇼핑GA · 금융플래너 김대민">
-<meta property="og:title" content="월 지출 · 적정 보험료 진단">
+<meta property="og:title" content="내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진">
 <meta property="og:description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://daemzero.github.io/insurance-check/">
@@ -24,12 +24,12 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="월 지출 · 적정 보험료 진단 — 현대홈쇼핑GA · 금융플래너 김대민">
+<meta property="og:image:alt" content="내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진 — 현대홈쇼핑GA · 금융플래너 김대민">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="월 지출 · 적정 보험료 진단">
+<meta name="twitter:title" content="내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진">
 <meta name="twitter:description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다.">
 <meta name="twitter:image" content="https://daemzero.github.io/insurance-check/og-image.png">
-<meta name="twitter:image:alt" content="월 지출 · 적정 보험료 진단 — 현대홈쇼핑GA · 금융플래너 김대민">
+<meta name="twitter:image:alt" content="내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진 — 현대홈쇼핑GA · 금융플래너 김대민">
 <style>
   :root{
     --teal-900:#0B3B38;
@@ -82,8 +82,8 @@
     background:linear-gradient(90deg, rgba(217,181,102,0), var(--gold-soft), rgba(217,181,102,0));
   }
   .eyebrow{
-    font-size:11px;letter-spacing:.28em;color:var(--gold-soft);
-    font-weight:700;text-transform:uppercase;margin-bottom:12px;
+    font-size:11.5px;letter-spacing:.07em;color:var(--gold-soft);
+    font-weight:700;margin-bottom:12px;
   }
   .hero h1{
     margin:0 0 10px;
@@ -490,7 +490,7 @@
     .hero h1{font-size:16pt;margin:0 0 1mm;line-height:1.2;}
     .hero-sub{font-size:8.5pt;margin:0;}
     .hero-desc{display:none;}
-    .eyebrow{font-size:6.5pt;letter-spacing:.24em;margin-bottom:1.2mm;}
+    .eyebrow{font-size:6.5pt;letter-spacing:.05em;margin-bottom:1.2mm;}
     #printHead{margin:0 0 2.5mm !important;font-size:7.5pt !important;}
 
     /* 카드 공통 */
@@ -606,8 +606,8 @@
 <div class="page">
 
   <header class="hero">
-    <div class="eyebrow">Premium Insurance Advisory</div>
-    <h1>월 지출 · 적정 보험료 진단</h1>
+    <div class="eyebrow">1분 보험료 건강검진</div>
+    <h1>내 보험료, 지금 딱 맞을까?</h1>
     <p class="hero-sub">현대홈쇼핑GA · 금융플래너 김대민</p>
     <p class="hero-desc">월 소득과 지출을 입력하시면, 지금 내는 보험료가 적정한 수준인지 바로 확인하실 수 있습니다.</p>
   </header>
@@ -1531,7 +1531,7 @@
     var d = new Date();
     var dateStr = d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate();
     var name = ($("clientName").value || "").trim();
-    $("printHead").textContent = "적정 보험료 진단 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
+    $("printHead").textContent = "1분 보험료 건강검진 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
   }
   window.addEventListener("beforeprint", function(){ printHeard = true; preparePrint(); });
 
@@ -1587,7 +1587,7 @@
     var contact = contactValue();
     var stamp = nowStamp();
     return {
-      "_subject": "[월 지출·적정 보험료 진단] " + name + " 고객 · " + stamp,
+      "_subject": "[1분 보험료 건강검진] " + name + " 고객 · " + stamp,
       "_template": "table",
       "_captcha": "false",
       "고객 성함": name,

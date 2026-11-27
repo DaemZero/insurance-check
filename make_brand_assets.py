@@ -97,11 +97,11 @@ def make_og(photo):
 
     # 좌측 텍스트 블록
     x = 84
-    kr_text(d, (x, 96), "PREMIUM INSURANCE ADVISORY", 22, GOLD, bold=1)
-    d.line([(x, 140), (x + 74, 140)], fill=GOLD_DEEP, width=3)
+    kr_text(d, (x, 96), "1분 보험료 건강검진", 24, GOLD, bold=1)
+    d.line([(x, 144), (x + 74, 144)], fill=GOLD_DEEP, width=3)
 
-    kr_text(d, (x, 172), "월 지출 · 적정", 64, (255, 255, 255), bold=BOLD)
-    kr_text(d, (x, 250), "보험료 진단", 64, (255, 255, 255), bold=BOLD)
+    kr_text(d, (x, 176), "내 보험료,", 64, (255, 255, 255), bold=2)
+    kr_text(d, (x, 254), "지금 딱 맞을까?", 64, (255, 255, 255), bold=2)
 
     kr_text(d, (x, 362), "현대홈쇼핑GA · 금융플래너 김대민", 32, (207, 230, 225), bold=1)
     d.line([(x, 432), (x + 520, 432)], fill=(255, 255, 255, 40), width=2)

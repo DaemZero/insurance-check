@@ -8,7 +8,7 @@ REPO="${1:-DaemZero/insurance-check}"
 OWNER="${REPO%%/*}"
 NAME="${REPO##*/}"
 URL="https://$(echo "$OWNER" | tr '[:upper:]' '[:lower:]').github.io/$NAME/"
-DESC="월 지출 · 적정 보험료 진단 (현대홈쇼핑GA 김대민)"
+DESC="내 보험료, 지금 딱 맞을까? · 1분 보험료 건강검진 (현대홈쇼핑GA 김대민)"
 cd "$(dirname "$0")"
 
 if ! gh repo view "$REPO" >/dev/null 2>&1; then
