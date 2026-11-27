@@ -1292,7 +1292,7 @@
       b.className = "opt" + (on ? " on" : "");
     });
     var p = $("insPrint");
-    if (p) p.textContent = consult.ins.length ? consult.ins.join(" · ") : "선택 없음";
+    if (p) p.textContent = consult.ins.length ? consult.ins.join("\u00a0· ") : "선택 없음";
   }
 
   function syncPressed(nodes, attr, value){
