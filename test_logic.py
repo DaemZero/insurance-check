@@ -32,6 +32,7 @@ var __ids = ["income","fixed","variable","saving","premium","resultCard","basisT
   "donut","donutPct","legend","barBand","barMarker","barMarkerLabel","compareNote",
   "strip","stripLabel","sMonth","sYear","sDecade","basisChip","rateMin","rateMax",
   "rateMinVal","rateMaxVal","memo","clientName","saveState","toast","printHead","printMemo",
+  "memoCard","printHint","printHintText","printHintClose",
   "resetBtn","clearMemoBtn","printBtn"];
 __ids.forEach(function(id){ __els[id] = new El(id); });
 __els.rateMin.value = "7"; __els.rateMax.value = "10";
@@ -61,7 +62,7 @@ var __printed = 0;
 var confirm = function(){ return true; };
 var setTimeout = function(fn,ms){ return 1; };
 var clearTimeout = function(){};
-var navigator = { clipboard: { writeText: function(){ return { then: function(){} }; } } };
+var navigator = { userAgent: "__UA__", clipboard: { writeText: function(){ return { then: function(){} }; } } };
 """
 
 CHECK = r"""
@@ -115,5 +116,47 @@ CHECK = r"""
 js = PRELUDE + code + "\n" + CHECK
 res = dukpy.evaljs(js)
 for row in json.loads(res):
+    print(json.dumps(row, ensure_ascii=False, indent=None))
+    print()
+
+# ---- 인앱 브라우저(카톡 웹뷰)에서 인쇄 버튼을 누르면 안내가 즉시 뜨는지 ----
+INAPP_UA = "Mozilla/5.0 (Linux; Android 13; SM-S918N Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/122.0.0.0 Mobile Safari/537.36 KAKAOTALK 10.4.3"
+INAPP_CHECK = r"""
+(function(){
+  __els.printHint.hidden = true;
+  __els.income.value = "350"; __els.income.fire("input");
+  __els.printBtn.fire("click");
+  return JSON.stringify([{
+    tag: "inapp-print",
+    ua_matched: true,
+    hint_hidden: !!__els.printHint.hidden,
+    hint_text: __els.printHintText.innerHTML.replace(/\s+/g, " ").trim(),
+    toast: __els.toast.textContent,
+    printed: __printed,
+    memo_saved: localStorage.getItem("daemin_consult_memo_v1") !== null
+  }]);
+})()
+"""
+js2 = PRELUDE.replace("__UA__", INAPP_UA) + code + "\n" + INAPP_CHECK
+for row in json.loads(dukpy.evaljs(js2)):
+    print(json.dumps(row, ensure_ascii=False, indent=None))
+    print()
+
+# 일반 브라우저(안드로이드 크롬)에서는 안내 없이 인쇄만 호출되는지
+NORMAL_UA = "Mozilla/5.0 (Linux; Android 13; SM-S918N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
+NORMAL_CHECK = r"""
+(function(){
+  __els.printHint.hidden = true;
+  __els.income.value = "350"; __els.income.fire("input");
+  __els.printBtn.fire("click");
+  return JSON.stringify([{
+    tag: "chrome-android-print",
+    hint_hidden: !!__els.printHint.hidden,
+    printed: __printed
+  }]);
+})()
+"""
+js3 = PRELUDE.replace("__UA__", NORMAL_UA) + code + "\n" + NORMAL_CHECK
+for row in json.loads(dukpy.evaljs(js3)):
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()

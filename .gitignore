@@ -1,2 +1,4 @@
 .DS_Store
 screenshots/
+.print_test/
+__pycache__/

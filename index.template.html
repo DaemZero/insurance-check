@@ -6,9 +6,30 @@
 <meta name="theme-color" content="#134E4A">
 <title>월 지출 · 적정 보험료 진단 | 현대홈쇼핑GA 김대민</title>
 <meta name="description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다. 현대홈쇼핑GA 금융플래너 김대민.">
+<link rel="canonical" href="https://daemzero.github.io/insurance-check/">
+
+<!-- 파비콘 · 홈화면 아이콘 -->
+<link rel="icon" type="image/png" sizes="128x128" href="__FAVICON_DATA_URI__">
+<link rel="apple-touch-icon" sizes="180x180" href="https://daemzero.github.io/insurance-check/apple-touch-icon.png">
+
+<!-- 카톡·문자·SNS 링크 미리보기 -->
+<meta property="og:site_name" content="현대홈쇼핑GA · 금융플래너 김대민">
 <meta property="og:title" content="월 지출 · 적정 보험료 진단">
 <meta property="og:description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://daemzero.github.io/insurance-check/">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://daemzero.github.io/insurance-check/og-image.png">
+<meta property="og:image:secure_url" content="https://daemzero.github.io/insurance-check/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="월 지출 · 적정 보험료 진단 — 현대홈쇼핑GA · 금융플래너 김대민">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="월 지출 · 적정 보험료 진단">
+<meta name="twitter:description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다.">
+<meta name="twitter:image" content="https://daemzero.github.io/insurance-check/og-image.png">
+<meta name="twitter:image:alt" content="월 지출 · 적정 보험료 진단 — 현대홈쇼핑GA · 금융플래너 김대민">
 <style>
   :root{
     --teal-900:#0B3B38;
@@ -298,6 +319,24 @@
   .btn svg{width:17px;height:17px;flex:0 0 auto;}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
 
+ /* ---------- print hint (인앱 브라우저 안내) ---------- */
+  .print-hint{
+    display:flex;gap:10px;align-items:flex-start;position:relative;
+    margin-top:12px;padding:13px 34px 13px 14px;border-radius:14px;
+    background:#FBF5E6;border:1px solid #EEDFBB;border-left:4px solid var(--gold);
+    color:#6B4E12;font-size:13px;line-height:1.6;
+  }
+  .print-hint[hidden]{display:none;}
+  .print-hint svg{width:18px;height:18px;flex:0 0 auto;margin-top:2px;}
+  .print-hint .ph-body{min-width:0;}
+  .print-hint .ph-body b{display:block;font-weight:800;color:#5A4108;margin-bottom:2px;}
+  .print-hint .ph-body em{font-style:normal;font-weight:800;color:#5A4108;background:#F3E6C4;border-radius:5px;padding:0 4px;}
+  .print-hint .ph-close{
+    position:absolute;top:6px;right:6px;border:0;background:transparent;
+    font-size:18px;line-height:1;color:#A97B1F;cursor:pointer;padding:2px 6px;border-radius:8px;
+  }
+  .print-hint .ph-close:hover{background:#F3E6C4;}
+
   /* ---------- name card ---------- */
   .namecard{
     background:linear-gradient(160deg,#0C3A37 0%, var(--teal-800) 60%, #116159 100%);
@@ -371,64 +410,120 @@
     .nc-photo{width:112px;height:132px;}
   }
 
-  /* ---------- print ---------- */
-  @page{size:A4;margin:12mm 11mm;}
+  /* ---------- print (A4 2장) ---------- */
+  @page{size:A4;margin:10mm;}
   @media print{
     html,body{background:#fff !important;}
-    body{font-size:11.5pt;}
+    body{font-size:9.5pt;line-height:1.3;}
     .page{max-width:none;padding:0;}
     .no-print{display:none !important;}
     .print-only{display:block !important;}
+
+    /* 1장 · 표지 헤더 */
     .hero{
-      margin:0 0 4mm;padding:5mm 6mm;border-radius:0 0 5mm 5mm;
+      margin:0 0 2.5mm;padding:3.5mm 5mm;border-radius:0 0 3mm 3mm;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .hero h1{font-size:18pt;margin-bottom:2mm;}
-    .hero-sub{font-size:9pt;margin-bottom:0;}
+    .hero h1{font-size:15pt;margin:0 0 1mm;line-height:1.2;}
+    .hero-sub{font-size:8pt;margin:0;}
     .hero-desc{display:none;}
-    .eyebrow{font-size:7.5pt;margin-bottom:2mm;}
+    .eyebrow{font-size:6.5pt;letter-spacing:.24em;margin-bottom:1.2mm;}
+    #printHead{margin:0 0 2.5mm !important;font-size:7.5pt !important;}
+
+    /* 카드 공통 */
     .card{
-      box-shadow:none;border:1px solid #DCD6C8;border-radius:3mm;
-      margin-bottom:4mm;padding:5mm;break-inside:avoid;
+      box-shadow:none;border:1px solid #DCD6C8;border-radius:2.5mm;
+      margin:0 0 2.5mm;padding:3.5mm 4mm;break-inside:avoid;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .sec-head{margin-bottom:3mm;}
-    .sec-head h2{font-size:12.5pt;}
-    .sec-head p{font-size:8.5pt;}
-    .status,.tile,.strip > div,.legend .dot,.bar-band,.bar-marker,.bar-marker span,.warn{
-      -webkit-print-color-adjust:exact;print-color-adjust:exact;
-    }
-    .fields{gap:2.5mm 4mm;}
-    .f-label{font-size:9pt;}
-    .f-input{border:1px solid #DDD6C6;padding:0 3mm;}
-    .f-input input{font-size:11pt;padding:1.4mm 0;}
-    .f-hint{font-size:7.5pt;}
-    .status{padding:3mm 3.5mm;margin-bottom:3mm;}
-    .status-amount{font-size:16pt;}
-    .status-desc{font-size:8.5pt;margin-top:2mm;}
-    .status-kicker{font-size:8pt;margin-bottom:1mm;}
-    .tiles{margin-bottom:4mm;gap:2mm;}
-    .tile{padding:2mm 1.5mm;}
-    .tile span{font-size:7.5pt;}
-    .tile b{font-size:10.5pt;}
+    .sec-head{margin-bottom:2mm;gap:2.5mm;align-items:center;}
+    .sec-num{width:6mm;height:6mm;font-size:7.5pt;border-radius:1.5mm;}
+    .sec-head h2{font-size:10.5pt;margin:0;line-height:1.2;}
+    .sec-head p{font-size:7pt;}
+
+    /* 01 입력 — 3열로 눌러 한 장에 */
+    .fields{grid-template-columns:repeat(3,1fr);gap:1.6mm 3mm;}
+    .field{gap:.6mm;}
+    .f-label{font-size:7.5pt;gap:1mm;}
+    .f-label em{font-size:6pt;padding:0 1mm;border-radius:1mm;}
+    .f-input{border:1px solid #DDD6C6;padding:0 2.2mm;border-radius:1.8mm;}
+    .f-input input{font-size:9.5pt;padding:.7mm 0;}
+    .unit{font-size:7pt;}
+    .f-hint{font-size:6pt;line-height:1.25;}
+
+    /* 02 결과 */
+    .status{padding:2.5mm 3mm;margin-bottom:2mm;border-radius:2mm;}
+    .status-kicker{font-size:7.5pt;margin-bottom:.6mm;}
+    .status-amount{font-size:14pt;}
+    .status-desc{font-size:7.5pt;margin-top:1.2mm;line-height:1.45;}
+    .tiles{gap:1.5mm;margin-bottom:3mm;}
+    .tile{padding:1.5mm 1mm;border-radius:1.8mm;}
+    .tile span{font-size:6.5pt;margin-bottom:.5mm;}
+    .tile b{font-size:9.5pt;}
     .tile small{display:none;}
-    .block{margin-bottom:4mm;}
-    .sub-title{font-size:9.5pt;margin-bottom:1mm;}
-    .block-note{font-size:7.5pt;margin-bottom:2mm;}
-    .breakdown{grid-template-columns:40mm 1fr;gap:5mm;}
-    .donut-wrap{max-width:40mm;}
-    .donut-center span{font-size:14pt;}
-    .legend{gap:1.5mm;}
-    .legend li{font-size:8.5pt;}
-    .bar{padding-top:6mm;}
-    .compare-note{font-size:8.5pt;margin-top:2mm;}
-    .strip{margin-top:3mm;}
-    .strip > div{padding:2mm 1mm;}
-    .strip span{font-size:7pt;}
-    .strip b{font-size:8.5pt;}
-    .namecard{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    textarea, input[type=text]{border:1px solid #DDD6C6 !important;background:#fff !important;}
-    footer{font-size:8pt;padding-top:4mm;}
+    .warn{font-size:7.5pt;padding:1.8mm 2.5mm;margin:-1mm 0 2.5mm;border-radius:2mm;gap:2mm;}
+    .warn svg{width:3.5mm;height:3.5mm;}
+
+    .block{margin-bottom:2.5mm;}
+    .sub-title{font-size:9pt;margin-bottom:.8mm;}
+    .sub-title::before{height:3mm;}
+    .block-note{font-size:7pt;margin-bottom:1.5mm;}
+    .breakdown{grid-template-columns:32mm 1fr;gap:4mm;}
+    .donut-wrap{max-width:32mm;}
+    .donut-center span{font-size:11pt;}
+    .donut-center small{font-size:6pt;}
+    .legend{gap:1mm;}
+    .legend li{font-size:7.5pt;gap:1.5mm;}
+    .legend .dot{width:2.2mm;height:2.2mm;}
+    .legend .lg-v em{font-size:6.5pt;}
+
+    .bar{padding-top:4.5mm;}
+    .bar-track{height:3mm;margin-bottom:1.5mm;}
+    .bar-marker span{top:-4.5mm;font-size:6.5pt;padding:.4mm 1.2mm;border-radius:1.2mm;}
+    .bar-axis{font-size:6.5pt;margin-top:1.5mm;}
+    .compare-note{font-size:7.5pt;margin-top:1.5mm;}
+
+    .strip{margin-top:2.5mm;border-radius:2mm;}
+    .strip > div{padding:1.5mm .8mm;}
+    .strip span{font-size:6.5pt;margin-bottom:.4mm;}
+    .strip b{font-size:8pt;}
+
+    /* 2장 · 메모부터 새 장 */
+    #memoCard{break-before:page;}
+    .memo-grid{gap:2mm;}
+    .memo-grid input[type=text], .memo-grid textarea{
+      font-size:8.5pt;border:1px solid #DDD6C6 !important;background:#fff !important;
+      padding:1.5mm 2mm;border-radius:1.8mm;line-height:1.45;
+    }
+    .memo-grid textarea{min-height:18mm;}
+    .memo-foot{margin-top:2mm;}
+
+    /* 명함 */
+    .namecard{padding:4mm;border-radius:2.5mm;}
+    .nc-top{gap:3.5mm;}
+    .nc-photo{width:18mm;height:21mm;border-radius:2mm;border-width:1pt;}
+    .nc-role{font-size:6.5pt;margin-bottom:.8mm;}
+    .nc-name{font-size:14pt;margin:0 0 .8mm;}
+    .nc-name span{font-size:8pt;}
+    .nc-org{font-size:8pt;}
+    .nc-body{margin-top:2.5mm;}
+    .nc-phone{padding:2mm 3mm;border-radius:2mm;}
+    .nc-phone .p-num{font-size:12pt;}
+    .nc-phone .p-cap{font-size:7pt;}
+    .nc-phone .p-ico{width:7mm;height:7mm;}
+    .nc-phone .p-ico svg{width:3.5mm;height:3.5mm;}
+    .nc-tags{gap:1.2mm;margin-top:2mm;}
+    .nc-tags span{font-size:6.5pt;padding:.6mm 1.8mm;}
+    .nc-meta{margin-top:1.8mm;font-size:6.5pt;flex-direction:row;gap:6mm;}
+    .nc-line{margin-top:2mm;padding-top:1.8mm;font-size:7.5pt;}
+
+    footer{font-size:6.5pt;padding:3mm 1mm 0;line-height:1.5;}
+
+    /* 인쇄물도 색을 그대로 */
+    .status,.tile,.strip > div,.legend .dot,.bar-band,.bar-marker,.bar-marker span,
+    .warn,.namecard,.nc-phone,.nc-tags span,.sec-num,.hero{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
   }
 </style>
 </head>
@@ -600,7 +695,7 @@
     </section>
 
     <!-- ============ 03 메모 ============ -->
-    <section class="card">
+    <section class="card" id="memoCard">
       <div class="sec-head">
         <div class="sec-num">03</div>
         <div>
@@ -622,12 +717,21 @@
           </button>
         </div>
       </div>
+
+      <div class="print-hint" id="printHint" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+        <div class="ph-body" id="printHintText">
+          <b>앱 안에서는 인쇄 창이 열리지 않을 수 있어요.</b>
+          오른쪽 위 메뉴(⋮)에서 <em>'다른 브라우저(크롬·삼성 인터넷)로 열기'</em>를 누른 뒤 다시 시도해 주세요!
+        </div>
+        <button type="button" class="ph-close" id="printHintClose" aria-label="인쇄 안내 닫기">×</button>
+      </div>
     </section>
 
     <!-- ============ 명함 ============ -->
     <section class="card namecard">
       <div class="nc-top">
-        <img class="nc-photo" src="__PHOTO_DATA_URI__" alt="김대민 프로필 사진">
+        <img class="nc-photo" src="__PHOTO_DATA_URI__" alt="김대민 프로필 사진" width="240" height="288" decoding="async">
         <div class="nc-id">
           <div class="nc-role">PREMIUM INSURANCE ADVISORY</div>
           <h2 class="nc-name">김대민<span>금융플래너</span></h2>
@@ -1048,9 +1152,43 @@
     toast("메모를 지웠습니다");
   });
 
+  /* ---------- 인쇄 / PDF 저장 ---------- */
+  var UA = (navigator && navigator.userAgent) || "";
+  /* 카톡(KAKAOTALK)·네이버·인스타·라인·앱 웹뷰(wv) 등은 window.print()가 막혀 무반응인 경우가 많다 */
+  var IN_APP_RE = /KAKAOTALK|NAVER\(inapp|; wv\)|wv\)|WebView|Instagram|FBAN|FBAV|FB_IAB|Line\/|DaumApps|everytime|inapp|KAKAO/i;
+  var MOBILE_RE = /Android|iPhone|iPad|iPod|Mobile/i;
+  var printHeard = false;
+
+  function showPrintHint(){
+    var h = $("printHint");
+    if (!h) return;
+    if (h.hidden){
+      h.hidden = false;
+      toast("앱 안에서는 인쇄 창이 열리지 않을 수 있어요 · 메뉴(⋮)에서 '다른 브라우저로 열기'");
+    }
+    try { h.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
+  }
+
+  if ($("printHintClose")){
+    $("printHintClose").addEventListener("click", function(){ $("printHint").hidden = true; });
+  }
+
   $("printBtn").addEventListener("click", function(){
     saveMemo();
-    window.print();
+    preparePrint();
+    printHeard = false;
+    /* 인앱 브라우저·웹뷰는 막힐 가능성이 커서 누르는 즉시 안내 */
+    if (IN_APP_RE.test(UA)) showPrintHint();
+    try {
+      window.print();
+    } catch (e) {
+      showPrintHint();
+      return;
+    }
+    /* 300ms 안에 beforeprint가 돌지 않았으면(인쇄 창이 안 열림) 안내 */
+    if (MOBILE_RE.test(UA)){
+      setTimeout(function(){ if (!printHeard) showPrintHint(); }, 300);
+    }
   });
 
   function preparePrint(){
@@ -1059,7 +1197,7 @@
     var name = ($("clientName").value || "").trim();
     $("printHead").textContent = "적정 보험료 진단 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
   }
-  window.addEventListener("beforeprint", preparePrint);
+  window.addEventListener("beforeprint", function(){ printHeard = true; preparePrint(); });
 
   /* ---------- init ---------- */
   loadRate();
