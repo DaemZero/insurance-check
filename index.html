@@ -1270,8 +1270,9 @@
   }
   window.addEventListener("beforeprint", function(){ printHeard = true; preparePrint(); });
 
-  /* ---------- 진단 결과 보내기 (Formsubmit → 김대민 플래너 Gmail) ---------- */
-  var SEND_URL = "https://formsubmit.co/ajax/kdm320538@gmail.com";
+  /* ---------- 진단 결과 보내기 (Formsubmit → 김대민 플래너 Gmail) ----------
+     Formsubmit이 발급한 무작위 별칭을 써서 페이지 소스에 메일 주소가 그대로 노출되지 않게 한다. */
+  var SEND_URL = "https://formsubmit.co/ajax/3c7935155d1f7bb34b9ca963ae2c4df6";
   var sendBusy = false;
 
   function pad2(n){ return (n < 10 ? "0" : "") + n; }

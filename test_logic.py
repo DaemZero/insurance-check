@@ -256,3 +256,11 @@ js4 = PRELUDE.replace("__UA__", NORMAL_UA) + code + "\n" + SEND_CHECK
 for row in json.loads(dukpy.evaljs(js4)):
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()
+
+# ---- 페이지 소스에 개인 메일 주소가 그대로 노출되지 않는지 ----
+assert "formsubmit.co/ajax/3c7935155d1f7bb34b9ca963ae2c4df6" in html, \
+    "formsubmit 별칭 엔드포인트가 페이지에 없습니다"
+assert "kdm320538@gmail.com" not in html, \
+    "페이지 소스에 개인 메일 주소가 노출됩니다"
+print(json.dumps({"tag": "no-plain-email-in-page", "ok": True, "endpoint": "formsubmit 별칭"},
+                 ensure_ascii=False))
