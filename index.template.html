@@ -91,6 +91,7 @@
     line-height:1.28;
     letter-spacing:-.02em;
     font-weight:800;
+    word-break:keep-all;   /* 좁을 때 '까?'만 다음 줄로 떨어지지 않게 낱말 단위로 끊는다 */
   }
   .hero-sub{
     margin:0 0 14px;
@@ -98,7 +99,18 @@
   }
   .hero-desc{
     margin:0;font-size:14.5px;line-height:1.65;color:#B9D6D0;max-width:30em;
+    word-break:keep-all;
   }
+  /* 상단 헤더 안쪽: 글(왼쪽) + 현대홈쇼핑 PLAN H 마크(오른쪽 흰 카드) */
+  .hero-inner{display:flex;align-items:center;gap:22px;}
+  .hero-copy{flex:1 1 auto;min-width:0;}
+  .hero-mark{
+    flex:0 0 auto;
+    width:186px;line-height:0;
+    background:#fff;border-radius:14px;padding:10px 12px 11px;
+    box-shadow:0 10px 22px rgba(0,0,0,.22), 0 0 0 1px rgba(255,255,255,.35);
+  }
+  .hero-mark img{display:block;width:100%;height:auto;}
 
   /* ---------- cards ---------- */
   .card{
@@ -458,6 +470,15 @@
   .toast.on{opacity:1;transform:translate(-50%,0);}
   .print-only{display:none;}
 
+  /* 좁은 폭: 마크를 맨 위 왼쪽에 두고 글은 그 아래로 */
+  @media (max-width:560px){
+    .hero-inner{flex-direction:column;align-items:flex-start;gap:16px;}
+    .hero-mark{order:-1;width:150px;}
+  }
+  /* 중간 폭(561~660px): 오른쪽 나란히 두되 마크를 조금 줄여 제목 자리를 남긴다 */
+  @media (max-width:660px) and (min-width:561px){
+    .hero-mark{width:162px;padding:9px 10px 10px;}
+  }
   @media (max-width:430px){
     .breakdown{grid-template-columns:1fr;gap:16px;}
     .donut-wrap{max-width:172px;}
@@ -465,6 +486,7 @@
     .strip b{font-size:13.5px;}
     .card{padding:19px 16px;}
     .hero{padding:28px 20px 26px;}
+    .hero-mark{width:134px;padding:8px 9px 9px;border-radius:11px;}
   }
   @media (min-width:700px){
     .page{padding:0 24px 48px;}
@@ -490,6 +512,12 @@
     .hero h1{font-size:18.5pt;margin:0 0 1.3mm;line-height:1.2;}
     .hero-sub{font-size:10pt;margin:0;}
     .hero-desc{display:none;}
+    .hero-inner{gap:4mm;align-items:center;}
+    .hero-mark{
+      width:30mm;padding:1.6mm 1.7mm;border-radius:2.2mm;box-shadow:none;
+      border:.3mm solid #E4DCCB;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
     .eyebrow{font-size:7.6pt;letter-spacing:.05em;margin-bottom:1.3mm;}
     #printHead{margin:0 0 2.4mm !important;font-size:8.4pt !important;}
 
@@ -601,10 +629,18 @@
 <div class="page">
 
   <header class="hero">
-    <div class="eyebrow">1분 보험료 건강검진</div>
-    <h1>내 보험료, 지금 딱 맞을까?</h1>
-    <p class="hero-sub">현대홈쇼핑GA · 금융플래너 김대민</p>
-    <p class="hero-desc">월 소득과 지출을 입력하시면, 지금 내는 보험료가 적정한 수준인지 바로 확인하실 수 있습니다.</p>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow">1분 보험료 건강검진</div>
+        <h1>내 보험료, 지금 딱 맞을까?</h1>
+        <p class="hero-sub">현대홈쇼핑GA · 금융플래너 김대민</p>
+        <p class="hero-desc">월 소득과 지출을 입력하시면, 지금 내는 보험료가 적정한 수준인지 바로 확인하실 수 있습니다.</p>
+      </div>
+      <div class="hero-mark">
+        <img src="__PLANH_DATA_URI__" width="640" height="493"
+             alt="현대홈쇼핑 PLAN H · 현대백화점그룹 현대홈쇼핑 GA사업부">
+      </div>
+    </div>
   </header>
 
   <div class="print-only" id="printHead" style="margin:0 0 5mm;font-size:10pt;color:#333;font-weight:700;"></div>
