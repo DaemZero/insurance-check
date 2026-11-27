@@ -1275,8 +1275,13 @@
   function toggleInsurance(name){
     var i = consult.ins.indexOf(name);
     if (i >= 0) consult.ins.splice(i, 1); else consult.ins.push(name);
+    sortIns();
     syncInsurance();
     saveConsult();
+  }
+  /* 화면·저장·인쇄·메일 모두 상담보험 목록 순서(INSURANCES)대로 보이게 정렬 */
+  function sortIns(){
+    consult.ins.sort(function(a, b){ return INSURANCES.indexOf(a) - INSURANCES.indexOf(b); });
   }
   function syncInsurance(){
     INSURANCES.forEach(function(name){
@@ -1373,6 +1378,7 @@
         var arr = JSON.parse(ins);
         if (arr && arr.length){
           consult.ins = arr.filter(function(x){ return INSURANCES.indexOf(x) >= 0; });
+          sortIns();
           if (consult.ins.length) any = true;
         }
       }
