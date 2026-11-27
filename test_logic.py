@@ -193,11 +193,12 @@ CHECK = r"""
     }
     return null;
   }
-  out.push({tag: "ins-chip-count", count: insChips.length,
-    labels: insChips.map(function(b){ return b.textContent; })});
+  out.push({tag: "ins-chip-order", count: insChips.length,
+    labels: insChips.map(function(b){ return b.textContent; }),
+    dataIns: insChips.map(function(b){ return b.getAttribute("data-ins"); })});
   var c1 = pressIns("암보험");
   var c2 = pressIns("보장점검");
-  var c3 = pressIns("치매재가보험");
+  var c3 = pressIns("치매보험");
   out.push({tag: "ins-select-3",
     pressed: [c1.getAttribute("aria-pressed"), c2.getAttribute("aria-pressed"), c3.getAttribute("aria-pressed")],
     cls: [c1.className, c2.className, c3.className],
@@ -207,17 +208,20 @@ CHECK = r"""
   out.push({tag: "ins-toggle-off", print: __els.insPrint.textContent,
     stored: localStorage.getItem("daemin_consult_insurance_v1")});
 
-  /* ---- 화재보험 · 실손의료비보험 (신규 2종) ---- */
-  var cFire = pressIns("화재보험");
+  /* ---- 실손의료비보험 · 태아보험 · 운전자보험 · 화재보험 (새로 든 4종) ---- */
   var cMedi = pressIns("실손의료비보험");
-  out.push({tag: "ins-new-2",
-    found: !!(cFire && cMedi),
-    pressed: [cFire && cFire.getAttribute("aria-pressed"), cMedi && cMedi.getAttribute("aria-pressed")],
-    cls: [cFire && cFire.className, cMedi && cMedi.className],
+  var cTae = pressIns("태아보험");
+  var cDriver = pressIns("운전자보험");
+  var cFire = pressIns("화재보험");
+  out.push({tag: "ins-new-4",
+    found: [!!cMedi, !!cTae, !!cDriver, !!cFire],
+    pressed: [cMedi && cMedi.getAttribute("aria-pressed"), cTae && cTae.getAttribute("aria-pressed"),
+              cDriver && cDriver.getAttribute("aria-pressed"), cFire && cFire.getAttribute("aria-pressed")],
+    cls: [cMedi && cMedi.className, cTae && cTae.className, cDriver && cDriver.className, cFire && cFire.className],
     print: __els.insPrint.textContent,
     stored: localStorage.getItem("daemin_consult_insurance_v1")});
-  pressIns("화재보험"); pressIns("실손의료비보험");
-  out.push({tag: "ins-new-2-toggle-off", print: __els.insPrint.textContent,
+  pressIns("실손의료비보험"); pressIns("태아보험"); pressIns("운전자보험"); pressIns("화재보험");
+  out.push({tag: "ins-new-4-toggle-off", print: __els.insPrint.textContent,
     stored: localStorage.getItem("daemin_consult_insurance_v1")});
   pressIns("암보험"); pressIns("실손의료비보험");
 
@@ -290,11 +294,29 @@ CHECK = r"""
 })()
 """
 
+EXPECT_INS = ["종합보험", "실손의료비보험", "암보험", "뇌/심장보험", "수술비보험", "상해보험",
+              "간병보험", "태아보험", "운전자보험", "화재보험", "치매보험", "치아보험",
+              "펫보험", "종신보험", "연금보험", "보장점검", "기타"]
+
 js = PRELUDE + code + "\n" + CHECK
 res = dukpy.evaljs(js)
-for row in json.loads(res):
+rows = json.loads(res)
+for row in rows:
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()
+
+# ---- 상담보험 17종: 유저가 지정한 정확한 순서·라벨인지 ----
+_order = [r for r in rows if r["tag"] == "ins-chip-order"][0]
+assert _order["count"] == 17, "상담보험 칩이 17종이 아닙니다: %d종" % _order["count"]
+assert _order["labels"] == EXPECT_INS, "상담보험 순서·라벨이 다릅니다:\n%s" % _order["labels"]
+assert _order["dataIns"] == EXPECT_INS, "data-ins 값이 다릅니다: %s" % _order["dataIns"]
+assert len(set(EXPECT_INS)) == 17, "기대 목록에 중복이 있습니다"
+_new = [r for r in rows if r["tag"] == "ins-new-4"][0]
+assert _new["found"] == [True, True, True, True], "새 4종 칩을 찾지 못했습니다: %s" % _new["found"]
+assert _new["pressed"] == ["true", "true", "true", "true"], "새 4종 칩이 선택되지 않았습니다: %s" % _new["pressed"]
+assert "치매재가보험" not in _order["labels"], "예전 라벨(치매재가보험)이 남아 있습니다"
+print(json.dumps({"tag": "ins-17-order", "ok": True, "labels": EXPECT_INS}, ensure_ascii=False))
+print()
 
 # ---- 인앱 브라우저(카톡 웹뷰)에서 인쇄 버튼을 누르면 안내가 즉시 뜨는지 ----
 INAPP_UA = "Mozilla/5.0 (Linux; Android 13; SM-S918N Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/122.0.0.0 Mobile Safari/537.36 KAKAOTALK 10.4.3"
@@ -459,20 +481,20 @@ assert re.search(r'data-p="220,90,50,20,18">60대<', html), "01번 예시에 60�
 assert 'id="clientName"' in html and '<label class="f-label" for="clientName">성함</label>' in html, \
     "03번 성함 칸(라벨 '성함')이 없습니다"
 assert 'placeholder="자유롭게 기재해주세요"' in html, "궁금하신 사항 placeholder가 없습니다"
-for label in ["종합보험", "암보험", "뇌/심장보험", "수술비보험", "상해보험", "간병보험",
-              "치매재가보험", "치아보험", "펫보험", "종신보험", "연금보험", "보장점검",
-              "화재보험", "실손의료비보험", "기타"]:
+for label in EXPECT_INS:
     assert '"%s"' % label in code, "상담보험 항목 누락: %s" % label
 
-# 상담보험 15종: 화재보험·실손의료비보험 포함, 기타는 마지막
+# 상담보험 17종: 유저가 지정한 순서 그대로, 기타는 마지막, 치매재가보험은 없음
 _ins = re.search(r'var INSURANCES = \[(.*?)\];', code, re.S)
 assert _ins, "INSURANCES 배열을 찾을 수 없습니다"
-labels15 = re.findall(r'"([^"]+)"', _ins.group(1))
-assert len(labels15) == 15, "상담보험 항목이 15종이 아닙니다: %d종 %s" % (len(labels15), labels15)
-assert labels15[-1] == "기타", "기타가 마지막 항목이 아닙니다: %s" % labels15
-for must in ("화재보험", "실손의료비보험"):
-    assert must in labels15, "상담보험 항목 누락: %s" % must
-assert len(set(labels15)) == len(labels15), "상담보험 항목에 중복이 있습니다: %s" % labels15
+labels17 = re.findall(r'"([^"]+)"', _ins.group(1))
+assert len(labels17) == 17, "상담보험 항목이 17종이 아닙니다: %d종 %s" % (len(labels17), labels17)
+assert labels17 == EXPECT_INS, "상담보험 배열 순서가 지정 순서와 다릅니다: %s" % labels17
+assert labels17[-1] == "기타", "기타가 마지막 항목이 아닙니다: %s" % labels17
+assert "치매재가보험" not in labels17, "예전 라벨(치매재가보험)이 남아 있습니다: %s" % labels17
+for must in ("화재보험", "실손의료비보험", "태아보험", "운전자보험", "치매보험"):
+    assert must in labels17, "상담보험 항목 누락: %s" % must
+assert len(set(labels17)) == len(labels17), "상담보험 항목에 중복이 있습니다: %s" % labels17
 for attr in ['data-mer="오전"', 'data-mer="오후"', 'data-min="00"', 'data-min="30"',
              'data-method="전화"', 'data-method="문자"', 'id="hourSel"']:
     assert attr in tpl, "연락가능시간/연락방법 컨트롤 누락: %s" % attr
@@ -490,6 +512,6 @@ assert "kdm320538@gmail.com" not in html, \
 print(json.dumps({"tag": "no-plain-email-in-page", "ok": True, "endpoint": "formsubmit 별칭"},
                  ensure_ascii=False))
 print(json.dumps({"tag": "html-checks", "ok": True, "checks": [
-    "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 15항목(화재·실손 포함)",
+    "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 17항목(순서·라벨 일치)",
     "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 4개 한국어 필드"]},
     ensure_ascii=False))
