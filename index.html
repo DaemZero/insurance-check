@@ -287,18 +287,54 @@
   }
   .basis-row output{flex:0 0 46px;text-align:right;font-size:13px;font-weight:800;color:var(--teal-800);font-variant-numeric:tabular-nums;}
 
-  /* ---------- memo ---------- */
-  .memo-grid{display:grid;gap:12px;}
+  /* ---------- memo (03 상담 정보) ---------- */
+  .memo-grid{display:grid;gap:15px;}
+  .memo-block{display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .memo-block .f-label{margin:0;}
   .memo-grid input[type=text]{
     width:100%;border:1.5px solid #DDD6C6;border-radius:11px;background:#FDFCF8;
     padding:11px 13px;font:inherit;font-size:15px;font-weight:700;color:var(--ink);outline:none;
   }
   .memo-grid textarea{
-    width:100%;min-height:110px;resize:vertical;
+    width:100%;min-height:82px;resize:vertical;
     border:1.5px solid #DDD6C6;border-radius:11px;background:#FDFCF8;
     padding:12px 13px;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);outline:none;
   }
   .memo-grid input:focus, .memo-grid textarea:focus{border-color:var(--teal-700);background:#fff;box-shadow:0 0 0 4px rgba(15,118,110,.10);}
+  .opt-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .opt{
+    font:inherit;font-size:13px;font-weight:700;color:var(--ink-soft);line-height:1.2;
+    background:#FBF9F2;border:1.4px solid #E1DAC9;border-radius:10px;
+    padding:8px 12px;cursor:pointer;transition:.14s;
+  }
+  .opt:hover{background:#F2EEE2;}
+  .opt:active{transform:translateY(1px);}
+  .opt.on, .opt[aria-pressed="true"]{
+    background:var(--teal-800);border-color:var(--teal-800);color:#fff;
+    box-shadow:0 3px 9px rgba(19,78,74,.18);
+  }
+  .seg{
+    display:inline-flex;border:1.4px solid #E1DAC9;border-radius:11px;
+    overflow:hidden;background:#FBF9F2;
+  }
+  .seg .opt{border:0;border-radius:0;background:transparent;min-width:54px;padding:10px 13px;text-align:center;}
+  .seg .opt + .opt{box-shadow:inset 1px 0 0 #E1DAC9;}
+  .seg .opt.on, .seg .opt[aria-pressed="true"]{background:var(--teal-800);color:#fff;box-shadow:none;}
+  .time-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .time-row select{
+    font:inherit;font-size:14px;font-weight:700;color:var(--ink);
+    border:1.4px solid #E1DAC9;border-radius:11px;background:#FBF9F2;
+    padding:10px 9px;min-width:84px;cursor:pointer;
+  }
+  .time-row select:disabled{opacity:.45;cursor:default;}
+  .time-row select:focus{outline:none;border-color:var(--teal-700);box-shadow:0 0 0 4px rgba(15,118,110,.10);}
+  .memo-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:430px){
+    .memo-row{grid-template-columns:1fr;gap:15px;}
+    .time-row{gap:7px;}
+    .time-row select{flex:1 1 84px;}
+  }
+  .print-val{font-size:15px;font-weight:700;color:var(--ink);line-height:1.5;}
   .memo-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;}
   .save-state{font-size:12px;font-weight:700;color:var(--muted);}
   .save-state.on{color:var(--teal-700);}
@@ -514,15 +550,20 @@
     .strip span{font-size:6.5pt;margin-bottom:.4mm;}
     .strip b{font-size:8.5pt;}
 
-    /* 2장 · 메모부터 새 장 */
+    /* 2장 · 상담 메모부터 새 장 */
     #memoCard{break-before:page;}
-    .memo-grid{gap:2mm;}
+    .memo-grid{gap:3.5mm;}
+    .memo-block{gap:1.2mm;}
     .memo-grid input[type=text], .memo-grid textarea{
-      font-size:9pt;border:1px solid #DDD6C6 !important;background:#fff !important;
-      padding:1.5mm 2mm;border-radius:1.8mm;line-height:1.45;
+      font-size:10pt;border:1px solid #DDD6C6 !important;background:#fff !important;
+      padding:1.8mm 2.2mm;border-radius:1.8mm;line-height:1.45;
     }
-    .memo-grid textarea{min-height:42mm;}
-    .memo-foot{margin-top:2mm;}
+    .memo-grid textarea{min-height:26mm;}
+    .memo-row{grid-template-columns:1fr 1fr;gap:6mm;}
+    .opt-chips, .seg, .time-row select{display:none !important;}
+    .print-val{font-size:10pt;font-weight:800;color:#12211F;padding:1.6mm 0 0;}
+    .memo-foot{margin-top:3mm;}
+    .memo-foot .actions{display:none !important;}
 
     /* 명함 */
     .namecard{padding:5mm;border-radius:2.5mm;}
@@ -628,6 +669,7 @@
         <button type="button" class="chip" data-p="350,110,60,50,13">30대 직장인</button>
         <button type="button" class="chip" data-p="450,150,80,60,48">40대 외벌이</button>
         <button type="button" class="chip" data-p="380,120,70,30,32">50대 자영업</button>
+        <button type="button" class="chip" data-p="220,90,50,20,18">60대</button>
         <button type="button" class="chip ghost" id="resetBtn">초기화</button>
       </div>
     </section>
@@ -726,17 +768,71 @@
         <div class="sec-num">03</div>
         <div>
           <h2>상담 메모</h2>
-          <p>이 브라우저에 저장되며, 아래에서 결과를 보내실 때 함께 전송됩니다</p>
+          <p>성함·관심 보험·연락 방법을 적어 두면 전송과 인쇄에 함께 담깁니다</p>
         </div>
       </div>
       <div class="memo-grid">
-        <input type="text" id="clientName" placeholder="고객명 (선택)" aria-label="고객명">
-        <textarea id="memo" placeholder="상담 내용, 고객 요청, 다음 연락 일정 등을 적어 두세요." aria-label="상담 메모"></textarea>
+        <div class="memo-block">
+          <label class="f-label" for="clientName">성함</label>
+          <input type="text" id="clientName" autocomplete="name" placeholder="예) 홍길동" aria-label="성함">
+        </div>
+
+        <div class="memo-block">
+          <span class="f-label">상담보험 <em>복수 선택</em></span>
+          <div class="opt-chips" id="insChips" role="group" aria-label="상담보험 선택 (복수 선택 가능)"></div>
+          <div class="print-only print-val" id="insPrint">상담보험 : 선택 없음</div>
+        </div>
+
+        <div class="memo-block">
+          <label class="f-label" for="questions">궁금하신 사항</label>
+          <textarea id="questions" placeholder="자유롭게 기재해주세요" aria-label="궁금하신 사항"></textarea>
+        </div>
+
+        <div class="memo-row">
+          <div class="memo-block">
+            <span class="f-label">연락가능시간</span>
+            <div class="time-row">
+              <div class="seg" id="meridiemSeg" role="group" aria-label="오전 오후 선택">
+                <button type="button" class="opt" data-mer="오전" aria-pressed="false">오전</button>
+                <button type="button" class="opt" data-mer="오후" aria-pressed="false">오후</button>
+              </div>
+              <select id="hourSel" aria-label="연락 가능한 시" disabled>
+                <option value="">시</option>
+                <option value="1">1시</option>
+                <option value="2">2시</option>
+                <option value="3">3시</option>
+                <option value="4">4시</option>
+                <option value="5">5시</option>
+                <option value="6">6시</option>
+                <option value="7">7시</option>
+                <option value="8">8시</option>
+                <option value="9">9시</option>
+                <option value="10">10시</option>
+                <option value="11">11시</option>
+                <option value="12">12시</option>
+              </select>
+              <div class="seg" id="minuteSeg" role="group" aria-label="분 선택">
+                <button type="button" class="opt" data-min="00" aria-pressed="false">00분</button>
+                <button type="button" class="opt" data-min="30" aria-pressed="false">30분</button>
+              </div>
+            </div>
+            <div class="print-only print-val" id="timePrint">연락가능시간 : 미선택</div>
+          </div>
+
+          <div class="memo-block">
+            <span class="f-label">연락방법</span>
+            <div class="seg" id="methodSeg" role="group" aria-label="연락방법 선택">
+              <button type="button" class="opt" data-method="전화" aria-pressed="false">전화</button>
+              <button type="button" class="opt" data-method="문자" aria-pressed="false">문자</button>
+            </div>
+            <div class="print-only print-val" id="methodPrint">연락방법 : 미선택</div>
+          </div>
+        </div>
       </div>
       <div class="memo-foot">
         <span class="save-state no-print" id="saveState">입력하면 자동 저장됩니다</span>
         <div class="actions no-print" style="margin:0;">
-          <button type="button" class="btn btn-ghost" id="clearMemoBtn">메모 지우기</button>
+          <button type="button" class="btn btn-ghost" id="clearMemoBtn">상담 정보 지우기</button>
           <button type="button" class="btn btn-primary" id="printBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
             인쇄 / PDF 저장
@@ -849,9 +945,16 @@
   var $ = function(id){ return document.getElementById(id); };
   var M = 10000; /* 원 per 만원 */
   var SVGNS = "http://www.w3.org/2000/svg";
-  var MEMO_KEY = "daemin_consult_memo_v1";
   var NAME_KEY = "daemin_consult_client_v1";
+  var INS_KEY = "daemin_consult_insurance_v1";
+  var Q_KEY = "daemin_consult_questions_v1";
+  var TIME_KEY = "daemin_consult_time_v1";
+  var METHOD_KEY = "daemin_consult_method_v1";
   var RATE_KEY = "daemin_consult_rate_v1";
+  var INSURANCES = ["종합보험","암보험","뇌/심장보험","수술비보험","상해보험","간병보험",
+    "치매재가보험","치아보험","펫보험","종신보험","연금보험","보장점검","기타"];
+  var consult = { ins: [], mer: "", hour: "", minute: "", method: "" };
+  var insBtns = {};
   var R = 78, CX = 100, CY = 100, SW = 26, C = 2 * Math.PI * R;
   var state = { min: 7, max: 10 };
 
@@ -1127,28 +1230,147 @@
     $("sDecade").textContent = won(d.diff * 120 * M);
   }
 
+  /* ---------- 03 상담 정보 ----------------------------- */
+  function setSaveState(msg, on){
+    var s = $("saveState");
+    if (!s) return;
+    s.textContent = msg;
+    if (on) s.classList.add("on"); else s.classList.remove("on");
+  }
+  function questionsValue(){
+    return (($("questions") && $("questions").value) || "").trim();
+  }
+  function timeText(){
+    if (!consult.mer) return "";
+    var t = consult.mer;
+    if (consult.hour) t += " " + consult.hour + "시";
+    if (consult.minute) t += " " + consult.minute + "분";
+    return t;
+  }
+  function insuranceText(){
+    return consult.ins.length ? consult.ins.join(", ") : "(없음)";
+  }
+
+  function buildInsuranceChips(){
+    var box = $("insChips");
+    if (!box) return;
+    INSURANCES.forEach(function(name){
+      var b = document.createElement("button");
+      b.setAttribute("type", "button");
+      b.className = "opt";
+      b.setAttribute("data-ins", name);
+      b.setAttribute("aria-pressed", "false");
+      b.textContent = name;
+      b.addEventListener("click", function(){ toggleInsurance(name); });
+      insBtns[name] = b;
+      box.appendChild(b);
+    });
+  }
+  function toggleInsurance(name){
+    var i = consult.ins.indexOf(name);
+    if (i >= 0) consult.ins.splice(i, 1); else consult.ins.push(name);
+    syncInsurance();
+    saveConsult();
+  }
+  function syncInsurance(){
+    INSURANCES.forEach(function(name){
+      var b = insBtns[name];
+      if (!b) return;
+      var on = consult.ins.indexOf(name) >= 0;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.className = "opt" + (on ? " on" : "");
+    });
+    var p = $("insPrint");
+    if (p) p.textContent = "상담보험 : " + (consult.ins.length ? consult.ins.join(" · ") : "선택 없음");
+  }
+
+  function syncPressed(nodes, attr, value){
+    if (!nodes) return;
+    for (var i = 0; i < nodes.length; i++){
+      var el = nodes[i];
+      var on = el.getAttribute(attr) === value;
+      el.setAttribute("aria-pressed", on ? "true" : "false");
+      el.className = "opt" + (on ? " on" : "");
+    }
+  }
+  function syncTime(){
+    var sel = $("hourSel");
+    if (sel){
+      sel.disabled = !consult.mer;
+      sel.value = consult.mer ? (consult.hour || "") : "";
+    }
+    syncPressed(document.querySelectorAll("[data-mer]"), "data-mer", consult.mer);
+    syncPressed(document.querySelectorAll("[data-min]"), "data-min", consult.minute);
+    var p = $("timePrint");
+    if (p) p.textContent = "연락가능시간 : " + (timeText() || "미선택");
+  }
+  function setMeridiem(v){
+    consult.mer = (consult.mer === v ? "" : v);
+    if (!consult.mer){ consult.hour = ""; consult.minute = ""; }
+    syncTime(); saveConsult();
+  }
+  function setMinute(v){
+    consult.minute = (consult.minute === v ? "" : v);
+    syncTime(); saveConsult();
+  }
+  function onHourChange(){
+    consult.hour = $("hourSel").value;
+    syncTime(); saveConsult();
+  }
+  function syncMethod(){
+    syncPressed(document.querySelectorAll("[data-method]"), "data-method", consult.method);
+    var p = $("methodPrint");
+    if (p) p.textContent = "연락방법 : " + (consult.method || "미선택");
+  }
+  function setMethod(v){
+    consult.method = (consult.method === v ? "" : v);
+    syncMethod(); saveConsult();
+  }
+  function syncConsult(){
+    if ($("clientName") && $("sendName")) syncName("clientName", "sendName");
+    syncInsurance(); syncTime(); syncMethod();
+  }
+
   /* ---------- persistence ---------- */
-  function saveMemo(){
+  function saveConsult(){
     try {
-      localStorage.setItem(MEMO_KEY, $("memo").value);
       localStorage.setItem(NAME_KEY, $("clientName").value);
-      var s = $("saveState");
-      s.textContent = "저장됨 · 이 브라우저에만 보관";
-      s.classList.add("on");
+      localStorage.setItem(INS_KEY, JSON.stringify(consult.ins));
+      localStorage.setItem(Q_KEY, ($("questions") && $("questions").value) || "");
+      localStorage.setItem(TIME_KEY, JSON.stringify({ mer: consult.mer, hour: consult.hour, minute: consult.minute }));
+      localStorage.setItem(METHOD_KEY, consult.method);
+      setSaveState("저장됨 · 이 브라우저에만 보관", true);
     } catch (e) { /* storage may be blocked */ }
   }
-  function loadMemo(){
+  function loadConsult(){
+    var any = false;
     try {
-      var m = localStorage.getItem(MEMO_KEY);
       var n = localStorage.getItem(NAME_KEY);
-      if (m) $("memo").value = m;
-      if (n) $("clientName").value = n;
-      if (m || n){
-        var s = $("saveState");
-        s.textContent = "불러옴 · 이 브라우저에만 보관";
-        s.classList.add("on");
+      if (n) { $("clientName").value = n; any = true; }
+      var q = localStorage.getItem(Q_KEY);
+      if (q) { $("questions").value = q; any = true; }
+      var ins = localStorage.getItem(INS_KEY);
+      if (ins){
+        var arr = JSON.parse(ins);
+        if (arr && arr.length){
+          consult.ins = arr.filter(function(x){ return INSURANCES.indexOf(x) >= 0; });
+          if (consult.ins.length) any = true;
+        }
       }
+      var t = localStorage.getItem(TIME_KEY);
+      if (t){
+        var o = JSON.parse(t);
+        if (o && typeof o === "object"){
+          consult.mer = o.mer || "";
+          consult.hour = o.hour || "";
+          consult.minute = o.minute || "";
+          if (consult.mer) any = true;
+        }
+      }
+      var m = localStorage.getItem(METHOD_KEY);
+      if (m){ consult.method = m; any = true; }
     } catch (e) { /* ignore */ }
+    if (any) setSaveState("불러옴 · 이 브라우저에만 보관", true);
   }
   function saveRate(){
     try { localStorage.setItem(RATE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -1205,22 +1427,41 @@
     saveRate(); render();
   });
 
-  var memoTimer;
-  function onMemoInput(){
-    clearTimeout(memoTimer);
-    memoTimer = setTimeout(saveMemo, 400);
+  var consultTimer;
+  function onConsultInput(){
+    clearTimeout(consultTimer);
+    consultTimer = setTimeout(saveConsult, 400);
   }
-  $("memo").addEventListener("input", onMemoInput);
-  $("clientName").addEventListener("input", onMemoInput);
+  if ($("questions")) $("questions").addEventListener("input", onConsultInput);
+  $("clientName").addEventListener("input", onConsultInput);
+
+  document.querySelectorAll("[data-mer]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setMeridiem(btn.getAttribute("data-mer")); });
+  });
+  document.querySelectorAll("[data-min]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setMinute(btn.getAttribute("data-min")); });
+  });
+  document.querySelectorAll("[data-method]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setMethod(btn.getAttribute("data-method")); });
+  });
+  if ($("hourSel")) $("hourSel").addEventListener("change", onHourChange);
 
   $("clearMemoBtn").addEventListener("click", function(){
-    if (!confirm("저장된 상담 메모와 고객명을 지울까요?")) return;
-    $("memo").value = ""; $("clientName").value = "";
-    try { localStorage.removeItem(MEMO_KEY); localStorage.removeItem(NAME_KEY); } catch (e) {}
-    var s = $("saveState");
-    s.textContent = "지웠습니다";
-    s.classList.remove("on");
-    toast("메모를 지웠습니다");
+    if (!confirm("저장된 상담 정보(성함·상담보험·궁금하신 사항·연락가능시간·연락방법)를 지울까요?")) return;
+    $("clientName").value = "";
+    if ($("questions")) $("questions").value = "";
+    if ($("sendName")) $("sendName").value = "";
+    consult.ins = []; consult.mer = ""; consult.hour = ""; consult.minute = ""; consult.method = "";
+    try {
+      localStorage.removeItem(NAME_KEY);
+      localStorage.removeItem(INS_KEY);
+      localStorage.removeItem(Q_KEY);
+      localStorage.removeItem(TIME_KEY);
+      localStorage.removeItem(METHOD_KEY);
+    } catch (e) {}
+    syncInsurance(); syncTime(); syncMethod();
+    setSaveState("지웠습니다", false);
+    toast("상담 정보를 지웠습니다");
   });
 
   /* ---------- 인쇄 / PDF 저장 ---------- */
@@ -1245,7 +1486,7 @@
   }
 
   $("printBtn").addEventListener("click", function(){
-    saveMemo();
+    saveConsult();
     preparePrint();
     printHeard = false;
     /* 인앱 브라우저·웹뷰는 막힐 가능성이 커서 누르는 즉시 안내 */
@@ -1320,7 +1561,6 @@
     var d = calc();
     var name = sendNameValue();
     var contact = contactValue();
-    var memo = (($("memo") && $("memo").value) || "").trim();
     var stamp = nowStamp();
     return {
       "_subject": "[월 지출·적정 보험료 진단] " + name + " 고객 · " + stamp,
@@ -1328,6 +1568,10 @@
       "_captcha": "false",
       "고객 성함": name,
       "연락처": contact,
+      "상담보험": insuranceText(),
+      "궁금하신 사항": questionsValue() || "(없음)",
+      "연락가능시간": timeText() || "(미선택)",
+      "연락방법": consult.method || "(미선택)",
       "월 실수령 소득": mw(d.income),
       "고정 생활비": mw(d.fixed),
       "변동 생활비": mw(d.variable),
@@ -1338,7 +1582,6 @@
       "보험료 비중": pct(d.ratio),
       "적정 범위": state.min + "% ~ " + state.max + "% (월 " + mw(d.minAmt) + " ~ " + mw(d.maxAmt) + ")",
       "판정 결과": verdictText(d),
-      "상담 메모": memo || "(없음)",
       "전송 시각": stamp
     };
   }
@@ -1436,7 +1679,7 @@
     nameSync = false;
   }
   if ($("sendName")){
-    $("sendName").addEventListener("input", function(){ syncName("sendName", "clientName"); onMemoInput(); });
+    $("sendName").addEventListener("input", function(){ syncName("sendName", "clientName"); onConsultInput(); });
   }
   $("clientName").addEventListener("input", function(){ syncName("clientName", "sendName"); });
   if ($("sendConsent")) $("sendConsent").addEventListener("change", function(){
@@ -1449,8 +1692,9 @@
   loadRate();
   $("rateMinVal").textContent = state.min + "%";
   $("rateMaxVal").textContent = state.max + "%";
-  loadMemo();
-  if ($("sendName")) syncName("clientName", "sendName");
+  buildInsuranceChips();
+  loadConsult();
+  syncConsult();
   render();
 })();
 </script>
