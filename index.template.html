@@ -473,133 +473,128 @@
     .nc-photo{width:112px;height:132px;}
   }
 
-  /* ---------- print (A4 2장) ---------- */
-  @page{size:A4;margin:10mm;}
+  /* ---------- print (A4 2장 · 글씨·요소 확대) ---------- */
+  @page{size:A4;margin:8mm;}
   @media print{
     html,body{background:#fff !important;}
-    body{font-size:10pt;line-height:1.35;}
+    body{font-size:9.5pt;line-height:1.4;}
     .page{max-width:none;padding:0;}
     .no-print{display:none !important;}
     .print-only{display:block !important;}
 
     /* 1장 · 표지 헤더 */
     .hero{
-      margin:0 0 3mm;padding:4mm 5mm;border-radius:0 0 3mm 3mm;
+      margin:0 0 3.2mm;padding:4.4mm 4.8mm 4mm;border-radius:0 0 2.8mm 2.8mm;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .hero h1{font-size:16pt;margin:0 0 1mm;line-height:1.2;}
-    .hero-sub{font-size:8.5pt;margin:0;}
+    .hero h1{font-size:18.5pt;margin:0 0 1.3mm;line-height:1.2;}
+    .hero-sub{font-size:10pt;margin:0;}
     .hero-desc{display:none;}
-    .eyebrow{font-size:6.5pt;letter-spacing:.05em;margin-bottom:1.2mm;}
-    #printHead{margin:0 0 2.5mm !important;font-size:7.5pt !important;}
+    .eyebrow{font-size:7.6pt;letter-spacing:.05em;margin-bottom:1.3mm;}
+    #printHead{margin:0 0 2.4mm !important;font-size:8.4pt !important;}
 
     /* 카드 공통 */
     .card{
-      box-shadow:none;border:1px solid #DCD6C8;border-radius:2.5mm;
-      margin:0 0 3mm;padding:4mm 4.5mm;break-inside:avoid;
+      box-shadow:none;border:1px solid #DCD6C8;border-radius:2.4mm;
+      margin:0 0 3.2mm;padding:4mm 4.4mm;break-inside:avoid;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .sec-head{margin-bottom:2.5mm;gap:2.5mm;align-items:center;}
-    .sec-num{width:6.5mm;height:6.5mm;font-size:8pt;border-radius:1.5mm;}
-    .sec-head h2{font-size:11pt;margin:0;line-height:1.2;}
-    .sec-head p{font-size:7.5pt;}
+    .sec-head{margin-bottom:2.8mm;gap:2.4mm;align-items:center;}
+    .sec-num{width:6.8mm;height:6.8mm;font-size:8.4pt;border-radius:1.6mm;}
+    .sec-head h2{font-size:12pt;margin:0;line-height:1.2;}
+    .sec-head p{font-size:8pt;}
 
     /* 01 입력 — 3열로 눌러 한 장에 */
-    .fields{grid-template-columns:repeat(3,1fr);gap:2mm 3mm;}
-    .field{gap:.6mm;}
-    .f-label{font-size:8pt;gap:1mm;}
-    .f-label em{font-size:6pt;padding:0 1mm;border-radius:1mm;}
-    .f-input{border:1px solid #DDD6C6;padding:0 2.2mm;border-radius:1.8mm;}
-    .f-input input{font-size:10.5pt;padding:.9mm 0;}
-    .unit{font-size:7pt;}
-    .f-hint{font-size:6.5pt;line-height:1.3;}
+    .fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:2mm 2.8mm;}
+    .field{gap:.7mm;min-width:0;}
+    .f-label{font-size:8.4pt;gap:1mm;}
+    .f-label em{font-size:6.4pt;padding:0 1mm;border-radius:1mm;}
+    .f-input{border:1px solid #DDD6C6;padding:0 2.1mm;border-radius:1.8mm;}
+    .f-input input{font-size:11.5pt;padding:1.1mm 0;}
+    .unit{font-size:7.6pt;}
+    .f-hint{font-size:6.8pt;line-height:1.35;word-break:keep-all;overflow-wrap:anywhere;}
 
     /* 02 결과 */
-    .status{padding:3mm 3.5mm;margin-bottom:2.5mm;border-radius:2mm;}
-    .status-kicker{font-size:7.5pt;margin-bottom:.6mm;}
-    .status-amount{font-size:15.5pt;}
-    .status-desc{font-size:8pt;margin-top:1.5mm;line-height:1.5;}
-    .tiles{gap:1.5mm;margin-bottom:3mm;}
-    .tile{padding:1.5mm 1mm;border-radius:1.8mm;}
-    .tile span{font-size:7pt;margin-bottom:.5mm;}
-    .tile b{font-size:10.5pt;}
+    .status{padding:3.2mm 3.6mm;margin-bottom:2.8mm;border-radius:2mm;}
+    .status-kicker{font-size:8pt;margin-bottom:.5mm;}
+    .status-amount{font-size:16.7pt;}
+    .status-desc{font-size:8.4pt;margin-top:1.6mm;line-height:1.5;}
+    .tiles{gap:1.6mm;margin-bottom:3.2mm;}
+    .tile{padding:1.75mm 1.2mm;border-radius:1.8mm;}
+    .tile span{font-size:7.6pt;margin-bottom:.5mm;}
+    .tile b{font-size:11.2pt;}
     .tile small{display:none;}
-    .warn{font-size:7.5pt;padding:1.8mm 2.5mm;margin:-1mm 0 2.5mm;border-radius:2mm;gap:2mm;}
-    .warn svg{width:3.5mm;height:3.5mm;}
+    .warn{font-size:8pt;padding:1.8mm 2.4mm;margin:-.8mm 0 2.4mm;border-radius:1.8mm;gap:2mm;}
+    .warn svg{width:3.6mm;height:3.6mm;}
 
-    .block{margin-bottom:3mm;}
-    .sub-title{font-size:9.5pt;margin-bottom:1mm;}
-    .sub-title::before{height:3mm;}
-    .block-note{font-size:7.5pt;margin-bottom:1.5mm;}
-    .breakdown{grid-template-columns:36mm 1fr;gap:5mm;}
-    .donut-wrap{max-width:36mm;}
-    .donut-center span{font-size:12pt;}
-    .donut-center small{font-size:6pt;}
-    .legend{gap:1mm;}
-    .legend li{font-size:8pt;gap:1.5mm;}
-    .legend .dot{width:2.2mm;height:2.2mm;}
-    .legend .lg-v em{font-size:6.5pt;}
+    .block{margin-bottom:3.2mm;}
+    .sub-title{font-size:10pt;margin-bottom:1.1mm;gap:2mm;}
+    .sub-title::before{height:3.2mm;width:1mm;}
+    .block-note{font-size:8pt;margin-bottom:1.6mm;padding-left:2.9mm;}
+    .breakdown{grid-template-columns:43mm 1fr;gap:5.6mm;}
+    .donut-wrap{max-width:43mm;}
+    .donut-center span{font-size:14.3pt;}
+    .donut-center small{font-size:6.8pt;}
+    .legend{gap:1.6mm;}
+    .legend li{font-size:8.8pt;gap:2mm;}
+    .legend .dot{width:2.4mm;height:2.4mm;}
+    .legend .lg-v em{font-size:7.2pt;}
 
-    .bar{padding-top:5mm;}
-    .bar-track{height:3mm;margin-bottom:1.5mm;}
-    .bar-marker span{top:-4.5mm;font-size:6.5pt;padding:.4mm 1.2mm;border-radius:1.2mm;}
-    .bar-axis{font-size:6.5pt;margin-top:1.5mm;}
-    .compare-note{font-size:8pt;margin-top:1.5mm;}
+    .bar{padding-top:6mm;}
+    .bar-track{height:3.6mm;margin-bottom:1.6mm;}
+    .bar-band{top:-1.2mm;bottom:-1.2mm;}
+    .bar-marker{top:-1.6mm;bottom:-1.6mm;width:3px;}
+    .bar-marker span{top:-5.2mm;font-size:7.2pt;padding:.5mm 1.5mm;border-radius:1.3mm;}
+    .bar-axis{font-size:7.2pt;margin-top:1.6mm;}
+    .compare-note{font-size:8.4pt;margin-top:1.6mm;}
 
-    .strip{margin-top:2.5mm;border-radius:2mm;}
-    .strip > div{padding:1.5mm .8mm;}
-    .strip span{font-size:6.5pt;margin-bottom:.4mm;}
-    .strip b{font-size:8.5pt;}
+    .strip{margin-top:3.2mm;border-radius:2mm;}
+    .strip > div{padding:1.9mm 1mm;}
+    .strip span{font-size:7.2pt;margin-bottom:.5mm;}
+    .strip b{font-size:10pt;}
 
     /* 2장 · 상담 메모부터 새 장 */
     #memoCard{break-before:page;}
-    .memo-grid{gap:3.5mm;}
-    .memo-block{gap:1.2mm;}
+    .memo-grid{gap:5.1mm;}
+    .memo-block{gap:1.9mm;}
     .memo-grid input[type=text], .memo-grid textarea{
-      font-size:10pt;border:1px solid #DDD6C6 !important;background:#fff !important;
-      padding:1.8mm 2.2mm;border-radius:1.8mm;line-height:1.45;
+      font-size:12.1pt;border:1px solid #DDD6C6 !important;background:#fff !important;
+      padding:2.4mm 2.8mm;border-radius:2.1mm;line-height:1.5;
     }
-    .memo-grid textarea{min-height:26mm;}
     .memo-grid textarea{display:none !important;}
     .qprint{
-      display:block !important;white-space:pre-wrap;word-break:break-word;
-      border:1px solid #DDD6C6;border-radius:1.8mm;background:#fff;
-      min-height:24mm;padding:1.8mm 2.2mm;font-size:10pt;line-height:1.45;color:#12211F;
+      display:block !important;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+      border:1px solid #DDD6C6;border-radius:2.1mm;background:#fff;
+      min-height:35.4mm;padding:2.6mm 2.8mm;font-size:12.1pt;line-height:1.55;color:#12211F;
     }
     #memoCard .f-label em{display:none !important;}
-    .memo-row{grid-template-columns:1fr 1fr;gap:6mm;}
+    #memoCard .f-label{font-size:9.8pt;}
+    .memo-row{grid-template-columns:1fr 1fr;gap:7.5mm;}
     .opt-chips, .seg, .time-row select{display:none !important;}
-    .print-val{font-size:10pt;font-weight:800;color:#12211F;padding:1.6mm 0 0;}
-    .memo-foot{margin-top:3mm;}
+    .print-val{font-size:12.1pt;font-weight:800;color:#12211F;padding:1.9mm 0 0;}
+    .memo-foot{margin-top:3.7mm;}
     .memo-foot .actions{display:none !important;}
 
     /* 명함 */
-    .namecard{padding:5mm;border-radius:2.5mm;}
-    .nc-top{gap:3.5mm;}
-    .nc-photo{width:26mm;height:30mm;border-radius:2mm;border-width:1pt;}
-    .nc-role{font-size:7pt;margin-bottom:1mm;}
-    .nc-name{font-size:18pt;margin:0 0 1mm;}
-    .nc-name span{font-size:9pt;}
-    .nc-org{font-size:9pt;}
-    .nc-body{margin-top:3mm;}
-    .nc-phone{padding:3mm 4mm;border-radius:2mm;}
-    .nc-phone .p-num{font-size:15pt;}
-    .nc-phone .p-cap{font-size:7.5pt;}
-    .nc-phone .p-ico{width:8mm;height:8mm;}
-    .nc-phone .p-ico svg{width:4mm;height:4mm;}
-    .nc-tags{gap:1.5mm;margin-top:2.5mm;}
-    .nc-tags span{font-size:7.5pt;padding:.8mm 2mm;}
-    .nc-meta{margin-top:3mm;font-size:7.5pt;flex-direction:row;gap:8mm;}
-    .nc-line{margin-top:3mm;padding-top:2.5mm;font-size:8.5pt;}
+    .namecard{padding:7mm 6.5mm;border-radius:3.3mm;}
+    .nc-top{gap:5.6mm;}
+    .nc-photo{width:35.4mm;height:41mm;border-radius:2.8mm;border-width:1.1pt;}
+    .nc-role{font-size:8.9pt;margin-bottom:1.5mm;}
+    .nc-name{font-size:25.2pt;margin:0 0 1.5mm;}
+    .nc-name span{font-size:12.6pt;}
+    .nc-org{font-size:13pt;}
+    .nc-body{margin-top:5.1mm;}
+    .nc-phone{padding:4.2mm 5.6mm;border-radius:2.8mm;}
+    .nc-phone .p-num{font-size:22.4pt;}
+    .nc-phone .p-cap{font-size:10.3pt;}
+    .nc-phone .p-ico{width:11.2mm;height:11.2mm;}
+    .nc-phone .p-ico svg{width:5.6mm;height:5.6mm;}
+    .nc-tags{gap:2.1mm;margin-top:3.7mm;}
+    .nc-tags span{font-size:9.8pt;padding:1.2mm 2.8mm;}
+    .nc-meta{margin-top:4.2mm;font-size:9.8pt;flex-direction:row;gap:9.3mm;}
+    .nc-line{margin-top:4.2mm;padding-top:3.7mm;font-size:11.2pt;}
 
-    footer{font-size:7pt;padding:4mm 1mm 0;line-height:1.55;}
-
-    /* 인쇄물도 색을 그대로 */
-    .status,.tile,.strip > div,.legend .dot,.bar-band,.bar-marker,.bar-marker span,
-    .warn,.namecard,.nc-phone,.nc-tags span,.sec-num,.hero{
-      -webkit-print-color-adjust:exact;print-color-adjust:exact;
-    }
-  }
+    footer{font-size:8.2pt;padding:5.1mm 1mm 0;line-height:1.58;word-break:keep-all;}
 </style>
 </head>
 <body>
@@ -940,7 +935,8 @@
   </main>
 
   <footer>
-    <b>참고용 안내</b> · 이 진단은 상담 참고 자료이며, 적정 보험료는 소득·가족 구성·보장 필요도에 따라 달라집니다. 실제 보험료는 상품·가입 연령·건강 상태에 따라 결정됩니다.<br>
+    <b>참고용 안내</b> · 이 진단은 상담 참고 자료이며, 적정 보험료는 소득·가족 구성·보장 필요도에 따라 달라집니다.<br>
+    실제 보험료는 상품·가입 연령·건강 상태에 따라 결정됩니다.<br>
     현대홈쇼핑GA · 금융플래너 김대민 · 010-5575-3205
   </footer>
 </div>
