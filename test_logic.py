@@ -33,6 +33,7 @@ var __ids = ["income","fixed","variable","saving","premium","resultCard","basisT
   "strip","stripLabel","sMonth","sYear","sDecade","basisChip","rateMin","rateMax",
   "rateMinVal","rateMaxVal","memo","clientName","saveState","toast","printHead","printMemo",
   "memoCard","printHint","printHintText","printHintClose",
+  "sendCard","sendName","sendContact","sendConsent","sendBtn","sendStatus","sendStatusText",
   "resetBtn","clearMemoBtn","printBtn"];
 __ids.forEach(function(id){ __els[id] = new El(id); });
 __els.rateMin.value = "7"; __els.rateMax.value = "10";
@@ -63,6 +64,33 @@ var confirm = function(){ return true; };
 var setTimeout = function(fn,ms){ return 1; };
 var clearTimeout = function(){};
 var navigator = { userAgent: "__UA__", clipboard: { writeText: function(){ return { then: function(){} }; } } };
+/* --- 동기 thenable 스텁(fetch) --- */
+function __promise(v, isErr, e){
+  var p = {
+    then: function(f){
+      if (isErr) return p;
+      var r; try { r = f(v); } catch (x) { return __promise(null, true, x); }
+      return (r && typeof r.then === "function") ? r : __promise(r, false, null);
+    },
+    "catch": function(f){
+      if (!isErr) return p;
+      var r; try { r = f(e); } catch (x) { return __promise(null, true, x); }
+      return (r && typeof r.then === "function") ? r : __promise(r, false, null);
+    }
+  };
+  return p;
+}
+var __lastFetch = null;
+var __fetchMode = "ok";
+var fetch = function(url, opts){
+  __lastFetch = { url: url, opts: opts };
+  if (__fetchMode === "fail") return __promise(null, true, { message: "network" });
+  var body = __fetchMode === "false"
+    ? '{"success":"false","message":"테스트 실패 강제"}'
+    : '{"success":"true","message":"전송되었습니다"}';
+  var resp = { ok: true, status: 200, text: function(){ return __promise(body, false, null); } };
+  return __promise(resp, false, null);
+};
 """
 
 CHECK = r"""
@@ -158,5 +186,73 @@ NORMAL_CHECK = r"""
 """
 js3 = PRELUDE.replace("__UA__", NORMAL_UA) + code + "\n" + NORMAL_CHECK
 for row in json.loads(dukpy.evaljs(js3)):
+    print(json.dumps(row, ensure_ascii=False, indent=None))
+    print()
+
+# ---- 진단 결과 보내기: 필수값 검증 → 전송 payload → 성공/실패 표시 ----
+SEND_CHECK = r"""
+(function(){
+  var out = [];
+  function st(){
+    return {
+      hidden: !!__els.sendStatus.hidden,
+      cls: __els.sendStatus.className,
+      text: (__els.sendStatusText.innerHTML || "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()
+    };
+  }
+  __els.sendName.value = "테스트 고객";
+  __els.sendContact.value = "010-0000-0000";
+  __els.sendConsent.checked = true;
+
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-no-income", called: !!__lastFetch, status: st()});
+
+  __els.income.value = "450"; __els.income.fire("input");
+  __els.sendName.value = "";
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-no-name", called: !!__lastFetch, status: st()});
+
+  __els.sendName.value = "테스트 고객"; __els.sendContact.value = "   ";
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-no-contact", called: !!__lastFetch, status: st()});
+
+  __els.sendContact.value = "123";
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-short-contact", called: !!__lastFetch, status: st()});
+
+  __els.sendContact.value = "010-0000-0000"; __els.sendConsent.checked = false;
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-no-consent", called: !!__lastFetch, status: st()});
+
+  __els.sendConsent.checked = true;
+  __els.memo.value = "5세대 실손 전환 상담 요청";
+  __els.fixed.value = "150"; __els.variable.value = "80";
+  __els.saving.value = "60"; __els.premium.value = "48";
+  __els.sendBtn.fire("click");
+  var payload = null;
+  if (__lastFetch){ try { payload = JSON.parse(__lastFetch.opts.body); } catch (e) {} }
+  out.push({
+    tag: "send-valid",
+    url: __lastFetch && __lastFetch.url,
+    method: __lastFetch && __lastFetch.opts.method,
+    ctype: __lastFetch && __lastFetch.opts.headers["Content-Type"],
+    keys: payload ? Object.keys(payload) : null,
+    payload: payload,
+    status: st()
+  });
+
+  __fetchMode = "false";
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-server-refused", status: st(), disabled: !!__els.sendBtn.disabled});
+
+  __fetchMode = "fail";
+  __els.sendBtn.fire("click");
+  out.push({tag: "send-network-fail", status: st(), disabled: !!__els.sendBtn.disabled});
+
+  return JSON.stringify(out);
+})()
+"""
+js4 = PRELUDE.replace("__UA__", NORMAL_UA) + code + "\n" + SEND_CHECK
+for row in json.loads(dukpy.evaljs(js4)):
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()

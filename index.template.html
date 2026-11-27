@@ -337,6 +337,32 @@
   }
   .print-hint .ph-close:hover{background:#F3E6C4;}
 
+  /* ---------- send form (진단 결과 보내기) ---------- */
+  .send-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:14px;}
+  .f-input.sm input{font-size:16px;font-weight:700;padding:13px 0;letter-spacing:0;}
+  .f-input.sm input::placeholder{font-size:14px;font-weight:600;}
+  .consent{
+    display:flex;gap:10px;align-items:flex-start;margin:4px 0 15px;
+    font-size:13px;line-height:1.6;color:var(--ink-soft);cursor:pointer;
+  }
+  .consent input{
+    flex:0 0 auto;width:19px;height:19px;margin:1px 0 0;accent-color:var(--teal-700);cursor:pointer;
+  }
+  .consent b{color:var(--coral-deep);font-weight:800;}
+  .send-actions{display:flex;flex-wrap:wrap;gap:10px;}
+  .btn-send{width:100%;font-size:15.5px;padding:14px 18px;}
+  .btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none;transform:none;}
+  .send-status{
+    margin-top:14px;border-radius:13px;padding:13px 15px;
+    font-size:13.5px;line-height:1.6;border:1px solid;
+  }
+  .send-status[hidden]{display:none;}
+  .send-status b{font-weight:800;}
+  .send-status.sent{background:#EDF6F3;border-color:#CDE5DE;color:#0D4A44;}
+  .send-status.err{background:#FDF0EC;border-color:#F6D3C9;color:#8C2E1A;}
+  .send-status.busy{background:#F6F4EE;border-color:var(--line);color:var(--ink-soft);}
+  .send-note{font-size:12px;color:var(--muted);margin:12px 0 0;line-height:1.6;}
+
   /* ---------- name card ---------- */
   .namecard{
     background:linear-gradient(160deg,#0C3A37 0%, var(--teal-800) 60%, #116159 100%);
@@ -700,7 +726,7 @@
         <div class="sec-num">03</div>
         <div>
           <h2>상담 메모</h2>
-          <p>이 브라우저에만 저장되며 외부로 전송되지 않습니다</p>
+          <p>이 브라우저에 저장되며, 아래에서 결과를 보내실 때 함께 전송됩니다</p>
         </div>
       </div>
       <div class="memo-grid">
@@ -726,6 +752,51 @@
         </div>
         <button type="button" class="ph-close" id="printHintClose" aria-label="인쇄 안내 닫기">×</button>
       </div>
+    </section>
+
+    <!-- ============ 04 진단 결과 보내기 ============ -->
+    <section class="card no-print" id="sendCard">
+      <div class="sec-head">
+        <div class="sec-num">04</div>
+        <div>
+          <h2>김대민 플래너에게 진단 결과 보내기</h2>
+          <p>입력하신 진단 내용을 상담용으로 바로 전달합니다</p>
+        </div>
+      </div>
+
+      <div class="send-grid">
+        <label class="field">
+          <span class="f-label">고객 성함 <em>필수</em></span>
+          <span class="f-input sm">
+            <input id="sendName" type="text" autocomplete="name" placeholder="예) 홍길동" aria-label="고객 성함">
+          </span>
+        </label>
+        <label class="field">
+          <span class="f-label">연락처 <em>필수</em></span>
+          <span class="f-input sm">
+            <input id="sendContact" type="text" inputmode="tel" autocomplete="tel" placeholder="010-1234-5678 또는 카톡 ID" aria-label="고객 연락처">
+          </span>
+          <span class="f-hint">연락받으실 휴대폰 번호나 카톡 ID</span>
+        </label>
+      </div>
+
+      <label class="consent" for="sendConsent">
+        <input type="checkbox" id="sendConsent">
+        <span><b>[필수]</b> 입력한 소득·지출 진단 내용을 김대민 금융플래너의 상담 안내 목적으로 전송하는 데 동의합니다.</span>
+      </label>
+
+      <div class="send-actions">
+        <button type="button" class="btn btn-primary btn-send" id="sendBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
+          김대민 플래너에게 결과 보내기
+        </button>
+      </div>
+
+      <div class="send-status" id="sendStatus" hidden role="status" aria-live="polite">
+        <span id="sendStatusText"></span>
+      </div>
+
+      <p class="send-note">보내주신 내용은 김대민 금융플래너의 상담 안내 목적으로만 사용되며, 다른 곳에 제공되지 않습니다. 상담을 원하지 않으시면 보내지 않으셔도 됩니다.</p>
     </section>
 
     <!-- ============ 명함 ============ -->
@@ -1199,11 +1270,186 @@
   }
   window.addEventListener("beforeprint", function(){ printHeard = true; preparePrint(); });
 
+  /* ---------- 진단 결과 보내기 (Formsubmit → 김대민 플래너 Gmail) ---------- */
+  var SEND_URL = "https://formsubmit.co/ajax/kdm320538@gmail.com";
+  var sendBusy = false;
+
+  function pad2(n){ return (n < 10 ? "0" : "") + n; }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      if (c === "&") return "&amp;";
+      if (c === "<") return "&lt;";
+      if (c === ">") return "&gt;";
+      if (c === '"') return "&quot;";
+      return "&#39;";
+    });
+  }
+  function nowStamp(){
+    var d = new Date();
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate())
+      + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+  }
+  function setSendStatus(kind, html){
+    var box = $("sendStatus"), txt = $("sendStatusText");
+    if (!box || !txt) return;
+    box.hidden = false;
+    box.className = "send-status " + kind;
+    txt.innerHTML = html;
+  }
+  function sendNameValue(){
+    return ($("sendName") && $("sendName").value || "").trim();
+  }
+  function contactValue(){
+    return ($("sendContact") && $("sendContact").value || "").trim();
+  }
+
+  function verdictText(d){
+    if (d.status === "over")
+      return "적정 범위 초과 — 적정 상한(" + mw(d.maxAmt) + ")보다 월 " + mw(d.diff) + " 많습니다";
+    if (d.status === "low")
+      return (d.premium > 0
+        ? "보험료 여력 있음 — 적정 하한(" + mw(d.minAmt) + ")까지 월 " + mw(d.diff) + " 여력"
+        : "보험료 미납입 — 적정 범위 " + mw(d.minAmt) + " ~ " + mw(d.maxAmt));
+    if (d.status === "ok")
+      return "적정 범위 안 — 적정 상한까지 월 " + mw(d.diff) + " 여력";
+    return "진단 전";
+  }
+
+  function buildPayload(){
+    var d = calc();
+    var name = sendNameValue();
+    var contact = contactValue();
+    var memo = (($("memo") && $("memo").value) || "").trim();
+    var stamp = nowStamp();
+    return {
+      "_subject": "[월 지출·적정 보험료 진단] " + name + " 고객 · " + stamp,
+      "_template": "table",
+      "_captcha": "false",
+      "고객 성함": name,
+      "연락처": contact,
+      "월 실수령 소득": mw(d.income),
+      "고정 생활비": mw(d.fixed),
+      "변동 생활비": mw(d.variable),
+      "저축 · 투자": mw(d.saving),
+      "현재 월 보험료": mw(d.premium),
+      "총 지출": mw(d.outflow),
+      "월 잔여 현금흐름": (d.remain < 0 ? "-" : "") + mw(Math.abs(d.remain)),
+      "보험료 비중": pct(d.ratio),
+      "적정 범위": state.min + "% ~ " + state.max + "% (월 " + mw(d.minAmt) + " ~ " + mw(d.maxAmt) + ")",
+      "판정 결과": verdictText(d),
+      "상담 메모": memo || "(없음)",
+      "전송 시각": stamp
+    };
+  }
+
+  function postToFormsubmit(payload){
+    var ctrl = null, timer = null;
+    try { ctrl = new AbortController(); } catch (e) { ctrl = null; }
+    var opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    };
+    if (ctrl){
+      opts.signal = ctrl.signal;
+      timer = setTimeout(function(){ try { ctrl.abort(); } catch (e) {} }, 20000);
+    }
+    return fetch(SEND_URL, opts).then(function(res){
+      clearTimeout(timer);
+      return res.text().then(function(raw){
+        var data = null;
+        try { data = JSON.parse(raw); } catch (e) { data = null; }
+        return { ok: !!res.ok, status: res.status, data: data, raw: raw };
+      });
+    }).catch(function(err){
+      clearTimeout(timer);
+      throw err;
+    });
+  }
+
+  function sendResult(){
+    if (sendBusy) return;
+    var d = calc();
+    var msg = null, focusId = "sendBtn", kind = "err";
+
+    if (d.income <= 0){
+      msg = "<b>월 실수령 소득</b>을 먼저 입력해 주세요. 진단 결과가 나온 뒤에 보내실 수 있습니다.";
+      focusId = "income";
+    } else if (!sendNameValue()){
+      msg = "<b>고객 성함</b>을 입력해 주세요.";
+      focusId = "sendName";
+    } else if (!contactValue()){
+      msg = "<b>연락처</b>를 입력해 주세요. 휴대폰 번호나 카톡 ID 중 편한 쪽으로 적어 주시면 됩니다.";
+      focusId = "sendContact";
+    } else if (contactValue().length < 4){
+      msg = "<b>연락처</b>가 너무 짧습니다. 연락받으실 번호나 카톡 ID를 정확히 한 번 더 확인해 주세요.";
+      focusId = "sendContact";
+    } else if (!($("sendConsent") && $("sendConsent").checked)){
+      msg = "진단 내용 전송에 대한 <b>동의</b>에 체크해 주세요.";
+      focusId = "sendConsent";
+    }
+
+    if (msg){
+      setSendStatus(kind, "<b>보내기 전에 확인해 주세요.</b><br>" + msg);
+      try {
+        if ($(focusId) && $(focusId).scrollIntoView) $(focusId).scrollIntoView({ behavior: "smooth", block: "center" });
+        if ($(focusId) && $(focusId).focus) $(focusId).focus();
+      } catch (e) {}
+      toast("입력하신 내용을 한 번 더 확인해 주세요");
+      return;
+    }
+
+    var payload = buildPayload();
+    var btn = $("sendBtn");
+    sendBusy = true;
+    if (btn) btn.disabled = true;
+    setSendStatus("busy", "보내는 중입니다… 잠시만 기다려 주세요.");
+
+    postToFormsubmit(payload).then(function(r){
+      sendBusy = false;
+      if (btn) btn.disabled = false;
+      var data = r && r.data ? r.data : null;
+      var ok = !!(data && String(data.success) === "true");
+      if (ok){
+        setSendStatus("sent", "<b>김대민 플래너에게 진단 결과를 보냈습니다.</b><br>확인 후 24시간 안에 연락드릴게요. 급하시면 <b>010-5575-3205</b>로 전화 주세요.");
+        toast("진단 결과를 보냈습니다");
+      } else {
+        var detail = data && (data.message || data.error) ? String(data.message || data.error) : ("응답 코드 " + (r ? r.status : "?"));
+        setSendStatus("err", "<b>전송이 완료되지 않았습니다.</b><br>잠시 후 다시 시도해 주시거나 <b>010-5575-3205</b>로 연락 주세요.<br><span style=\"font-size:12px;opacity:.8\">(" + esc(detail) + ")</span>");
+      }
+    }).catch(function(){
+      sendBusy = false;
+      if (btn) btn.disabled = false;
+      setSendStatus("err", "<b>전송이 완료되지 않았습니다.</b><br>네트워크 상태를 확인한 뒤 다시 시도하시거나 <b>010-5575-3205</b>로 연락 주세요.");
+    });
+  }
+
+  if ($("sendBtn")) $("sendBtn").addEventListener("click", sendResult);
+
+  /* 성함은 상담 메모의 고객명과 서로 맞춰 둔다 */
+  var nameSync = false;
+  function syncName(src, dst){
+    if (nameSync) return;
+    nameSync = true;
+    try { $(dst).value = $(src).value; } catch (e) {}
+    nameSync = false;
+  }
+  if ($("sendName")){
+    $("sendName").addEventListener("input", function(){ syncName("sendName", "clientName"); onMemoInput(); });
+  }
+  $("clientName").addEventListener("input", function(){ syncName("clientName", "sendName"); });
+  if ($("sendConsent")) $("sendConsent").addEventListener("change", function(){
+    if ($("sendConsent").checked && $("sendStatus") && $("sendStatus").className.indexOf("err") >= 0){
+      $("sendStatus").hidden = true;
+    }
+  });
+
   /* ---------- init ---------- */
   loadRate();
   $("rateMinVal").textContent = state.min + "%";
   $("rateMaxVal").textContent = state.max + "%";
   loadMemo();
+  if ($("sendName")) syncName("clientName", "sendName");
   render();
 })();
 </script>
