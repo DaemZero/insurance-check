@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="theme-color" content="#134E4A">
+<title>월 지출 · 적정 보험료 진단 | 현대홈쇼핑GA 김대민</title>
+<meta name="description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다. 현대홈쇼핑GA 금융플래너 김대민.">
+<meta property="og:title" content="월 지출 · 적정 보험료 진단">
+<meta property="og:description" content="월 소득과 지출을 입력하면 지금 내는 보험료가 적정한 수준인지 바로 확인할 수 있습니다.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --teal-900:#0B3B38;
+    --teal-800:#134E4A;
+    --teal-700:#0F766E;
+    --teal-500:#2E9C90;
+    --gold:#B5852F;
+    --gold-soft:#D9B566;
+    --coral:#E4694F;
+    --coral-deep:#B4341F;
+    --ink:#12211F;
+    --ink-soft:#4A5A57;
+    --muted:#7C8A87;
+    --cream:#F7F3E9;
+    --card:#FFFFFF;
+    --line:#E6E0D1;
+    --track:#EFE9DA;
+    --radius:20px;
+    --shadow:0 10px 30px rgba(19,78,74,.08), 0 2px 6px rgba(19,78,74,.05);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:760px;margin:0 auto;padding:0 16px 40px;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    margin:0 -16px 18px;
+    padding:34px 24px 30px;
+    background:
+      radial-gradient(120% 90% at 88% -10%, rgba(217,181,102,.30) 0%, rgba(217,181,102,0) 55%),
+      linear-gradient(158deg, #092F2D 0%, var(--teal-800) 52%, #10655E 100%);
+    color:#fff;
+    border-radius:0 0 26px 26px;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;left:24px;right:24px;bottom:0;height:2px;
+    background:linear-gradient(90deg, rgba(217,181,102,0), var(--gold-soft), rgba(217,181,102,0));
+  }
+  .eyebrow{
+    font-size:11px;letter-spacing:.28em;color:var(--gold-soft);
+    font-weight:700;text-transform:uppercase;margin-bottom:12px;
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-size:clamp(26px, 6.6vw, 34px);
+    line-height:1.28;
+    letter-spacing:-.02em;
+    font-weight:800;
+  }
+  .hero-sub{
+    margin:0 0 14px;
+    font-size:14.5px;color:#CFE6E1;font-weight:600;letter-spacing:.01em;
+  }
+  .hero-desc{
+    margin:0;font-size:14.5px;line-height:1.65;color:#B9D6D0;max-width:30em;
+  }
+
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px 20px;
+    margin:0 0 16px;
+  }
+  .sec-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;}
+  .sec-num{
+    flex:0 0 auto;
+    width:32px;height:32px;border-radius:9px;
+    background:linear-gradient(150deg,var(--teal-800),var(--teal-700));
+    color:#fff;font-size:13px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    letter-spacing:.02em;
+  }
+  .sec-head h2{
+    margin:2px 0 2px;font-size:19px;line-height:1.3;font-weight:800;letter-spacing:-.01em;
+  }
+  .sec-head p{margin:0;font-size:13.5px;color:var(--muted);}
+
+  /* ---------- fields ---------- */
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:14px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .f-label{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .f-label em{
+    font-style:normal;font-size:11px;font-weight:700;color:var(--gold);
+    background:#FBF3E0;border:1px solid #EFDFBC;border-radius:6px;padding:1px 6px;
+  }
+  .f-input{
+    display:flex;align-items:center;gap:8px;
+    border:1.6px solid #DDD6C6;border-radius:13px;background:#FDFCF8;
+    padding:0 14px;transition:border-color .15s, box-shadow .15s, background .15s;
+  }
+  .f-input:focus-within{
+    border-color:var(--teal-700);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(15,118,110,.10);
+  }
+  .f-input input{
+    flex:1 1 auto;min-width:0;
+    border:0;background:transparent;outline:none;
+    font:inherit;font-size:22px;font-weight:800;color:var(--ink);
+    padding:11px 0;letter-spacing:-.01em;
+    font-variant-numeric:tabular-nums;
+  }
+  .f-input input::placeholder{color:#C6C0B1;font-weight:600;}
+  .unit{flex:0 0 auto;font-size:13.5px;font-weight:700;color:var(--muted);}
+  .f-hint{font-size:12.5px;color:var(--muted);line-height:1.45;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);}
+  .chip-label{font-size:12.5px;font-weight:800;color:var(--gold);letter-spacing:.02em;margin-right:2px;}
+  .chip{
+    font:inherit;font-size:13px;font-weight:700;color:var(--teal-800);
+    background:#F1F6F4;border:1px solid #D6E4E0;border-radius:999px;
+    padding:8px 13px;cursor:pointer;transition:.15s;
+  }
+  .chip:hover{background:#E6F0EC;}
+  .chip:active{transform:translateY(1px);}
+  .chip.ghost{color:var(--ink-soft);background:#fff;border-color:var(--line);}
+
+  /* ---------- status ---------- */
+  .status{
+    border-radius:16px;padding:18px 18px 16px;margin-bottom:16px;
+    border:1px solid;position:relative;overflow:hidden;
+  }
+  .status-kicker{font-size:12.5px;font-weight:800;letter-spacing:.06em;margin-bottom:6px;}
+  .status-amount{font-size:clamp(27px,7.4vw,38px);font-weight:900;letter-spacing:-.025em;line-height:1.15;font-variant-numeric:tabular-nums;}
+  .status-desc{margin:8px 0 0;font-size:13.5px;line-height:1.6;}
+  .st-over{background:#FDF0EC;border-color:#F6D3C9;color:#8C2E1A;}
+  .st-over .status-kicker{color:var(--coral-deep);}
+  .st-over .status-desc{color:#9A5140;}
+  .st-ok{background:#EDF6F3;border-color:#CDE5DE;color:#0D4A44;}
+  .st-ok .status-kicker{color:var(--teal-700);}
+  .st-ok .status-desc{color:#3E6B65;}
+  .st-low{background:#FBF5E6;border-color:#EEDFBB;color:#6B4E12;}
+  .st-low .status-kicker{color:#A97B1F;}
+  .st-low .status-desc{color:#8A6E33;}
+  .st-wait{background:#F6F4EE;border-color:var(--line);color:var(--ink-soft);}
+  .st-wait .status-kicker{color:var(--muted);}
+  .st-wait .status-desc{color:var(--muted);}
+
+  /* ---------- tiles ---------- */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+  .tile{
+    background:#FBFAF5;border:1px solid var(--line);border-radius:13px;
+    padding:12px 10px;text-align:center;
+  }
+  .tile span{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:-.01em;margin-bottom:4px;}
+  .tile b{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;word-break:keep-all;}
+  .tile b.neg{color:var(--coral-deep);}
+  .tile b.pos{color:var(--teal-700);}
+  .tile small{display:block;font-size:10.5px;color:#A6A092;margin-top:2px;font-variant-numeric:tabular-nums;}
+
+  /* ---------- donut ---------- */
+  .sub-title{
+    font-size:14px;font-weight:800;color:var(--ink);margin:0 0 4px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .sub-title::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--gold);display:block;}
+  .block{margin-bottom:22px;}
+  .block:last-child{margin-bottom:0;}
+  .block-note{font-size:12.5px;color:var(--muted);margin:0 0 12px;padding-left:11px;}
+
+  .breakdown{display:grid;grid-template-columns:minmax(150px,190px) 1fr;gap:18px;align-items:center;}
+  .donut-wrap{position:relative;width:100%;max-width:190px;margin:0 auto;}
+  .donut-wrap svg{display:block;width:100%;height:auto;}
+  .donut-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    pointer-events:none;text-align:center;
+  }
+  .donut-center span{font-size:clamp(22px,5.6vw,27px);font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1;}
+  .donut-center small{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.02em;margin-top:2px;}
+
+  .legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .legend li{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:13.5px;}
+  .legend .dot{width:11px;height:11px;border-radius:50%;display:block;}
+  .legend .lg-k{font-weight:700;color:var(--ink-soft);}
+  .legend .lg-v{font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;}
+  .legend .lg-v em{font-style:normal;font-weight:700;color:var(--muted);font-size:11.5px;margin-left:5px;}
+
+  /* ---------- comparison bar ---------- */
+  .bar{padding:26px 0 0;}
+  .bar-track{
+    position:relative;height:16px;border-radius:999px;background:var(--track);
+    margin:0 0 8px;
+  }
+  .bar-band{
+    position:absolute;top:-4px;bottom:-4px;border-radius:999px;
+    background:linear-gradient(90deg,#BFE3DA,#8FCBBE);
+    border:1px solid #7FBFAF;
+  }
+  .bar-marker{
+    position:absolute;top:-16px;bottom:-16px;width:3px;border-radius:2px;
+    background:var(--coral);transform:translateX(-1.5px);
+    box-shadow:0 0 0 2px #fff;
+  }
+  .bar-marker span{
+    position:absolute;top:-24px;white-space:nowrap;
+    font-size:11.5px;font-weight:800;color:var(--coral-deep);
+    background:#FDF0EC;border:1px solid #F6D3C9;border-radius:7px;padding:2px 7px;
+    font-variant-numeric:tabular-nums;
+  }
+  .bar-axis{display:flex;justify-content:space-between;font-size:10.5px;color:#A6A092;font-weight:700;margin-top:6px;}
+  .compare-note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:12px 0 0;font-variant-numeric:tabular-nums;}
+  .compare-note b{color:var(--teal-800);}
+
+  /* ---------- strip ---------- */
+  .strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:20px;
+  }
+  .strip > div{background:#FBFAF5;padding:13px 8px;text-align:center;}
+  .strip span{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;}
+  .strip b{display:block;font-size:15px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;word-break:keep-all;}
+  .strip .hl b{color:var(--coral-deep);}
+  .strip.ok .hl b{color:var(--teal-700);}
+
+  /* ---------- basis (sliders) ---------- */
+  .basis{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);}
+  .basis-head{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px;}
+  .basis-head b{
+    font-size:12.5px;color:var(--teal-800);background:#EDF6F3;border:1px solid #CDE5DE;
+    border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums;
+  }
+  .basis-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .basis-row label{flex:0 0 52px;font-size:12.5px;font-weight:700;color:var(--muted);}
+  .basis-row input[type=range]{
+    flex:1 1 auto;min-width:0;accent-color:var(--teal-700);height:26px;cursor:pointer;
+  }
+  .basis-row output{flex:0 0 46px;text-align:right;font-size:13px;font-weight:800;color:var(--teal-800);font-variant-numeric:tabular-nums;}
+
+  /* ---------- memo ---------- */
+  .memo-grid{display:grid;gap:12px;}
+  .memo-grid input[type=text]{
+    width:100%;border:1.5px solid #DDD6C6;border-radius:11px;background:#FDFCF8;
+    padding:11px 13px;font:inherit;font-size:15px;font-weight:700;color:var(--ink);outline:none;
+  }
+  .memo-grid textarea{
+    width:100%;min-height:110px;resize:vertical;
+    border:1.5px solid #DDD6C6;border-radius:11px;background:#FDFCF8;
+    padding:12px 13px;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);outline:none;
+  }
+  .memo-grid input:focus, .memo-grid textarea:focus{border-color:var(--teal-700);background:#fff;box-shadow:0 0 0 4px rgba(15,118,110,.10);}
+  .memo-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .save-state{font-size:12px;font-weight:700;color:var(--muted);}
+  .save-state.on{color:var(--teal-700);}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font:inherit;font-size:14.5px;font-weight:800;
+    border-radius:12px;padding:12px 18px;cursor:pointer;border:1.5px solid transparent;
+    transition:.15s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--teal-800);color:#fff;box-shadow:0 6px 16px rgba(19,78,74,.18);}
+  .btn-primary:hover{background:#0E403D;}
+  .btn-outline{background:#fff;color:var(--teal-800);border-color:#CFDCD8;}
+  .btn-outline:hover{background:#F2F7F5;}
+  .btn-ghost{background:#fff;color:var(--ink-soft);border-color:var(--line);}
+  .btn svg{width:17px;height:17px;flex:0 0 auto;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
+  /* ---------- name card ---------- */
+  .namecard{
+    background:linear-gradient(160deg,#0C3A37 0%, var(--teal-800) 60%, #116159 100%);
+    border:0;color:#fff;box-shadow:0 16px 38px rgba(12,58,55,.22);
+    padding:22px 20px 20px;position:relative;overflow:hidden;
+  }
+  .namecard::before{
+    content:"";position:absolute;right:-60px;top:-70px;width:210px;height:210px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,181,102,.22), rgba(217,181,102,0) 68%);
+  }
+  .nc-top{display:flex;gap:16px;align-items:center;position:relative;z-index:1;}
+  .nc-photo{
+    flex:0 0 auto;width:96px;height:112px;border-radius:14px;object-fit:cover;object-position:50% 22%;
+    border:2px solid rgba(217,181,102,.55);background:#0a2c2a;
+    box-shadow:0 8px 18px rgba(0,0,0,.25);
+  }
+  .nc-id{min-width:0;}
+  .nc-role{font-size:11px;letter-spacing:.18em;color:var(--gold-soft);font-weight:800;margin-bottom:6px;}
+  .nc-name{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin:0 0 4px;}
+  .nc-name span{font-size:14px;font-weight:700;color:#BCDBD5;margin-left:7px;letter-spacing:0;}
+  .nc-org{font-size:13.5px;color:#CFE6E1;font-weight:700;}
+  .nc-body{position:relative;z-index:1;margin-top:18px;}
+  .nc-phone{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:rgba(255,255,255,.10);border:1px solid rgba(217,181,102,.40);
+    border-radius:14px;padding:13px 16px;text-decoration:none;color:#fff;
+    transition:.15s;
+  }
+  .nc-phone:hover{background:rgba(255,255,255,.16);}
+  .nc-phone .p-num{font-size:23px;font-weight:900;letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1.1;}
+  .nc-phone .p-cap{font-size:11.5px;color:#CFE6E1;font-weight:700;margin-top:3px;}
+  .nc-phone .p-ico{
+    flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--gold-soft);
+    display:flex;align-items:center;justify-content:center;color:#3A2A06;
+  }
+  .nc-phone .p-ico svg{width:20px;height:20px;}
+  .nc-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+  .nc-tags span{
+    font-size:11.5px;font-weight:700;color:#E9F3F0;
+    background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:4px 10px;
+  }
+  .nc-meta{margin-top:12px;font-size:12px;color:#A9CAC4;font-weight:600;display:flex;flex-direction:column;gap:2px;word-break:break-all;}
+  .nc-line{margin:14px 0 0;padding-top:13px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:#CFE6E1;line-height:1.6;}
+  .nc-line b{color:#fff;font-weight:800;}
+
+  /* ---------- footer / toast ---------- */
+  footer{padding:6px 4px 0;font-size:11.5px;line-height:1.7;color:#8E8A7D;}
+  footer b{color:#6E6A5E;}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+    background:rgba(12,42,40,.94);color:#fff;font-size:13.5px;font-weight:700;
+    padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:50;
+    max-width:88vw;text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+  .print-only{display:none;}
+
+  @media (max-width:430px){
+    .breakdown{grid-template-columns:1fr;gap:16px;}
+    .donut-wrap{max-width:172px;}
+    .tile b{font-size:15.5px;}
+    .strip b{font-size:13.5px;}
+    .card{padding:19px 16px;}
+    .hero{padding:28px 20px 26px;}
+  }
+  @media (min-width:700px){
+    .page{padding:0 24px 48px;}
+    .hero{margin:0 -24px 22px;padding:40px 40px 36px;}
+    .card{padding:26px 26px;}
+    .nc-photo{width:112px;height:132px;}
+  }
+
+  /* ---------- print ---------- */
+  @page{size:A4;margin:12mm 11mm;}
+  @media print{
+    html,body{background:#fff !important;}
+    body{font-size:11.5pt;}
+    .page{max-width:none;padding:0;}
+    .no-print{display:none !important;}
+    .print-only{display:block !important;}
+    .hero{
+      margin:0 0 10mm;padding:8mm 7mm;border-radius:0 0 6mm 6mm;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .hero h1{font-size:22pt;}
+    .hero-desc{font-size:9.5pt;}
+    .card{
+      box-shadow:none;border:1px solid #DCD6C8;border-radius:4mm;
+      margin-bottom:6mm;padding:6mm;break-inside:avoid;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .status,.tile,.strip > div,.legend .dot,.bar-band,.bar-marker,.bar-marker span{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .f-input{border:1px solid #DDD6C6;padding:0 4mm;}
+    .f-input input{font-size:13pt;padding:2mm 0;}
+    .status-amount{font-size:20pt;}
+    .tiles,.strip{break-inside:avoid;}
+    .breakdown{grid-template-columns:52mm 1fr;}
+    .strip b{font-size:10pt;}
+    .tile b{font-size:11pt;}
+    .namecard{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .memoprint{margin-top:4mm;font-size:10pt;line-height:1.7;white-space:pre-wrap;}
+    textarea, input[type=text]{border:1px solid #DDD6C6 !important;background:#fff !important;}
+    footer{font-size:8pt;padding-top:4mm;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="eyebrow">Premium Insurance Advisory</div>
+    <h1>월 지출 · 적정 보험료 진단</h1>
+    <p class="hero-sub">현대홈쇼핑GA · 금융플래너 김대민</p>
+    <p class="hero-desc">월 소득과 지출을 입력하시면, 지금 내는 보험료가 적정한 수준인지 바로 확인하실 수 있습니다.</p>
+  </header>
+
+  <div class="print-only" id="printHead" style="margin:0 0 5mm;font-size:10pt;color:#333;font-weight:700;"></div>
+
+  <main>
+    <!-- ============ 01 입력 ============ -->
+    <section class="card" id="inputCard">
+      <div class="sec-head">
+        <div class="sec-num">01</div>
+        <div>
+          <h2>소득과 지출</h2>
+          <p>월 기준 · 단위는 만원입니다</p>
+        </div>
+      </div>
+
+      <div class="fields">
+        <label class="field">
+          <span class="f-label">월 실수령 소득 <em>세후</em></span>
+          <span class="f-input">
+            <input id="income" class="num" type="number" inputmode="decimal" min="0" step="any" placeholder="350" aria-label="월 실수령 소득 (만원)">
+            <span class="unit">만원</span>
+          </span>
+          <span class="f-hint">예) 350</span>
+        </label>
+
+        <label class="field">
+          <span class="f-label">고정 생활비</span>
+          <span class="f-input">
+            <input id="fixed" class="num" type="number" inputmode="decimal" min="0" step="any" placeholder="110" aria-label="고정 생활비 (만원)">
+            <span class="unit">만원</span>
+          </span>
+          <span class="f-hint">주거·공과금·통신·교통·교육·대출상환</span>
+        </label>
+
+        <label class="field">
+          <span class="f-label">변동 생활비</span>
+          <span class="f-input">
+            <input id="variable" class="num" type="number" inputmode="decimal" min="0" step="any" placeholder="60" aria-label="변동 생활비 (만원)">
+            <span class="unit">만원</span>
+          </span>
+          <span class="f-hint">식비·생활용품·여가·경조사</span>
+        </label>
+
+        <label class="field">
+          <span class="f-label">저축 · 투자</span>
+          <span class="f-input">
+            <input id="saving" class="num" type="number" inputmode="decimal" min="0" step="any" placeholder="50" aria-label="저축과 투자 (만원)">
+            <span class="unit">만원</span>
+          </span>
+          <span class="f-hint">적립식·연금저축·청약·투자</span>
+        </label>
+
+        <label class="field">
+          <span class="f-label">현재 월 보험료</span>
+          <span class="f-input">
+            <input id="premium" class="num" type="number" inputmode="decimal" min="0" step="any" placeholder="13" aria-label="현재 월 보험료 (만원)">
+            <span class="unit">만원</span>
+          </span>
+          <span class="f-hint">현재 납입 중인 보험료 합계</span>
+        </label>
+      </div>
+
+      <div class="chips no-print">
+        <span class="chip-label">예시</span>
+        <button type="button" class="chip" data-p="350,110,60,50,13">30대 직장인</button>
+        <button type="button" class="chip" data-p="450,150,80,60,25">40대 외벌이</button>
+        <button type="button" class="chip" data-p="400,130,70,40,35">50대 자영업</button>
+        <button type="button" class="chip ghost" id="resetBtn">초기화</button>
+      </div>
+    </section>
+
+    <!-- ============ 02 결과 ============ -->
+    <section class="card" id="resultCard">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
+        <div>
+          <h2>진단 결과</h2>
+          <p id="basisText">적정 보험료 = 월 소득의 7~10%</p>
+        </div>
+      </div>
+
+      <div class="status st-wait" id="statusBox">
+        <div class="status-kicker" id="statusKicker">진단 대기</div>
+        <div class="status-amount num" id="statusAmount">소득을 입력해 주세요</div>
+        <p class="status-desc" id="statusDesc">월 실수령 소득을 입력하시면 적정 보험료 범위를 계산해 드립니다.</p>
+      </div>
+
+      <div class="tiles">
+        <div class="tile">
+          <span>총 지출</span>
+          <b id="tOutflow" class="num">—</b>
+          <small>생활비+저축+보험료</small>
+        </div>
+        <div class="tile">
+          <span>월 잔여 현금흐름</span>
+          <b id="tRemain" class="num">—</b>
+          <small>소득 − 총 지출</small>
+        </div>
+        <div class="tile">
+          <span>보험료 비중</span>
+          <b id="tRatio" class="num">—</b>
+          <small>소득 대비</small>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 class="sub-title">소득 대비 지출 비중</h3>
+        <p class="block-note">월 소득이 어디로 쓰이는지 한눈에 보여 드립니다.</p>
+        <div class="breakdown">
+          <div class="donut-wrap">
+            <svg id="donut" viewBox="0 0 200 200" role="img" aria-label="소득 대비 지출 구성 도넛 차트"></svg>
+            <div class="donut-center">
+              <span id="donutPct" class="num">—</span>
+              <small>지출 비중</small>
+            </div>
+          </div>
+          <ul class="legend" id="legend"></ul>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 class="sub-title">현재 보험료 vs 적정 범위</h3>
+        <p class="block-note">연한 띠가 적정 범위, 주황 선이 현재 보험료입니다.</p>
+        <div class="bar">
+          <div class="bar-track">
+            <div class="bar-band" id="barBand"></div>
+            <div class="bar-marker" id="barMarker"><span id="barMarkerLabel"></span></div>
+          </div>
+          <div class="bar-axis"><span>0%</span><span>5%</span><span>10%</span><span>15%</span><span>20%</span></div>
+        </div>
+        <p class="compare-note" id="compareNote">—</p>
+      </div>
+
+      <div class="strip" id="strip">
+        <div class="hl"><span id="stripLabel">월 기준</span><b id="sMonth" class="num">—</b></div>
+        <div><span>1년 환산</span><b id="sYear" class="num">—</b></div>
+        <div><span>10년 환산</span><b id="sDecade" class="num">—</b></div>
+      </div>
+
+      <div class="basis no-print">
+        <div class="basis-head">적정 비율 기준 <b id="basisChip">7% ~ 10%</b></div>
+        <div class="basis-row">
+          <label for="rateMin">하한</label>
+          <input type="range" id="rateMin" min="3" max="15" step="0.5" value="7" aria-label="적정 보험료 하한 비율">
+          <output id="rateMinVal">7%</output>
+        </div>
+        <div class="basis-row">
+          <label for="rateMax">상한</label>
+          <input type="range" id="rateMax" min="5" max="20" step="0.5" value="10" aria-label="적정 보험료 상한 비율">
+          <output id="rateMaxVal">10%</output>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 03 메모 ============ -->
+    <section class="card">
+      <div class="sec-head">
+        <div class="sec-num">03</div>
+        <div>
+          <h2>상담 메모</h2>
+          <p>이 브라우저에만 저장되며 외부로 전송되지 않습니다</p>
+        </div>
+      </div>
+      <div class="memo-grid">
+        <input type="text" id="clientName" placeholder="고객명 (선택)" aria-label="고객명">
+        <textarea id="memo" placeholder="상담 내용, 고객 요청, 다음 연락 일정 등을 적어 두세요." aria-label="상담 메모"></textarea>
+      </div>
+      <div class="memoprint print-only" id="printMemo"></div>
+      <div class="memo-foot">
+        <span class="save-state" id="saveState">입력하면 자동 저장됩니다</span>
+        <div class="actions no-print" style="margin:0;">
+          <button type="button" class="btn btn-ghost" id="clearMemoBtn">메모 지우기</button>
+          <button type="button" class="btn btn-primary" id="printBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+            인쇄 / PDF 저장
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 명함 ============ -->
+    <section class="card namecard">
+      <div class="nc-top">
+        <img class="nc-photo" src="__PHOTO_DATA_URI__" alt="김대민 프로필 사진">
+        <div class="nc-id">
+          <div class="nc-role">PREMIUM INSURANCE ADVISORY</div>
+          <h2 class="nc-name">김대민<span>금융플래너</span></h2>
+          <div class="nc-org">현대홈쇼핑GA · 보험전문가</div>
+        </div>
+      </div>
+      <div class="nc-body">
+        <a class="nc-phone" href="tel:01055753205" aria-label="김대민에게 전화하기 010-5575-3205">
+          <div>
+            <div class="p-num">010-5575-3205</div>
+            <div class="p-cap">눌러서 바로 전화 · 상담 문의</div>
+          </div>
+          <span class="p-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z"/></svg>
+          </span>
+        </a>
+        <div class="nc-tags">
+          <span>30여 개 생·손보사 비교</span>
+          <span>정밀 보장분석</span>
+          <span>보험금 청구 케어</span>
+          <span>노후·상속 설계</span>
+        </div>
+        <div class="nc-meta">
+          <span>E-mail &nbsp;22408036@hyundaihmall.com</span>
+          <span>Fax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0504-268-3205</span>
+        </div>
+        <p class="nc-line">가입보다 이해야 먼저 — <b>기존 보험은 지키고, 빈틈만 채워 드립니다.</b></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <b>참고용 안내</b> · 이 진단은 상담 참고 자료이며, 적정 보험료는 소득·가족 구성·보장 필요도에 따라 달라집니다. 실제 보험료는 상품·가입 연령·건강 상태에 따라 결정됩니다.<br>
+    현대홈쇼핑GA · 금융플래너 김대민 · 010-5575-3205
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var M = 10000; /* 원 per 만원 */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var MEMO_KEY = "daemin_consult_memo_v1";
+  var NAME_KEY = "daemin_consult_client_v1";
+  var RATE_KEY = "daemin_consult_rate_v1";
+  var R = 78, CX = 100, CY = 100, SW = 26, C = 2 * Math.PI * R;
+  var state = { min: 7, max: 10 };
+
+  /* ---------- formatting ---------- */
+  function num(id){
+    var v = parseFloat($(id).value);
+    if (!isFinite(v) || v < 0) return 0;
+    return v;
+  }
+  function mw(v){ /* 만원, 1 decimal */
+    var r = Math.round(v * 10) / 10;
+    return r.toLocaleString("ko-KR", { maximumFractionDigits: 1 }) + "만원";
+  }
+  function won(v){ /* v in 원 */
+    v = Math.round(v || 0);
+    var sign = v < 0 ? "-" : "";
+    var a = Math.abs(v);
+    if (a >= 100000000){
+      var eok = Math.floor(a / 100000000);
+      var man = Math.round((a % 100000000) / 10000);
+      if (man === 10000) { eok += 1; man = 0; }
+      if (man === 0) return sign + eok.toLocaleString("ko-KR") + "억원";
+      return sign + eok.toLocaleString("ko-KR") + "억 " + man.toLocaleString("ko-KR") + "만원";
+    }
+    if (a >= 10000){
+      return sign + Math.round(a / 10000).toLocaleString("ko-KR") + "만원";
+    }
+    return sign + a.toLocaleString("ko-KR") + "원";
+  }
+  function pct(v){
+    return (Math.round(v * 10) / 10).toLocaleString("ko-KR", { maximumFractionDigits: 1 }) + "%";
+  }
+  function toast(msg){
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("on");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove("on"); }, 2000);
+  }
+
+  /* ---------- calculation ---------- */
+  function calc(){
+    var income = num("income");
+    var fixed = num("fixed");
+    var variable = num("variable");
+    var saving = num("saving");
+    var premium = num("premium");
+    var living = fixed + variable;
+    var outflow = living + saving + premium;
+    var remain = income - outflow;
+    var ratio = income > 0 ? premium / income * 100 : 0;
+    var minAmt = income * state.min / 100;
+    var maxAmt = income * state.max / 100;
+    var status, diff = 0;
+
+    if (income <= 0) {
+      status = "wait";
+    } else if (premium > maxAmt + 1e-9) {
+      status = "over"; diff = premium - maxAmt;
+    } else if (premium < minAmt - 1e-9) {
+      status = "low"; diff = minAmt - premium;
+    } else {
+      status = "ok"; diff = maxAmt - premium;
+    }
+    return {
+      income: income, fixed: fixed, variable: variable, saving: saving, premium: premium,
+      living: living, outflow: outflow, remain: remain, ratio: ratio,
+      minAmt: minAmt, maxAmt: maxAmt, status: status, diff: diff
+    };
+  }
+
+  /* ---------- render ---------- */
+  function render(){
+    var d = calc();
+    renderStatus(d);
+    renderTiles(d);
+    renderDonut(d);
+    renderCompare(d);
+    renderStrip(d);
+    $("basisText").textContent = "적정 보험료 = 월 소득의 " + state.min + "~" + state.max + "%";
+    $("basisChip").textContent = state.min + "% ~ " + state.max + "%";
+  }
+
+  function renderStatus(d){
+    var box = $("statusBox"), k = $("statusKicker"), a = $("statusAmount"), s = $("statusDesc");
+    box.className = "status st-" + d.status;
+    if (d.status === "wait"){
+      k.textContent = "진단 대기";
+      a.textContent = "소득을 입력해 주세요";
+      s.textContent = "월 실수령 소득을 입력하시면 적정 보험료 범위와 여력을 계산해 드립니다.";
+      return;
+    }
+    if (d.status === "over"){
+      k.textContent = "적정 범위 초과";
+      a.textContent = "월 " + mw(d.diff) + " 초과";
+      s.textContent = "현재 보험료가 적정 상한(" + mw(d.maxAmt) + ")보다 " + mw(d.diff) + " 많습니다. "
+        + "보험료를 그대로 10년 납입하면 " + won(d.premium * 120 * M) + "이며, "
+        + "이 중 " + won(d.diff * 120 * M) + "은 적정선을 넘는 금액입니다.";
+      return;
+    }
+    if (d.status === "low"){
+      k.textContent = d.premium > 0 ? "보험료 여력 있음" : "보험료 미납입";
+      a.textContent = "월 " + mw(d.diff) + " 여력";
+      s.textContent = "현재 보험료가 적정 하한(" + mw(d.minAmt) + ")보다 " + mw(d.diff) + " 적습니다. "
+        + "소득 대비 보험료 부담은 가벼운 편이며, 비어 있는 보장이 없는지 점검해 볼 수 있습니다.";
+      return;
+    }
+    k.textContent = "적정 범위 안";
+    a.textContent = "월 " + mw(d.diff) + " 여력";
+    s.textContent = "현재 보험료(" + mw(d.premium) + ")가 적정 범위 " + state.min + "~" + state.max + "% 안에 있습니다. "
+      + "적정 상한까지 " + mw(d.diff) + "의 여력이 남아 있습니다.";
+  }
+
+  function renderTiles(d){
+    var o = $("tOutflow"), r = $("tRemain"), t = $("tRatio");
+    o.textContent = d.income > 0 || d.outflow > 0 ? mw(d.outflow) : "—";
+    if (d.income > 0){
+      r.textContent = (d.remain < 0 ? "−" : "") + mw(Math.abs(d.remain));
+      r.className = "num " + (d.remain < 0 ? "neg" : "pos");
+      t.textContent = pct(d.ratio);
+      t.className = "num";
+    } else {
+      r.textContent = "—"; r.className = "num";
+      t.textContent = "—"; t.className = "num";
+    }
+  }
+
+  function renderDonut(d){
+    var svg = $("donut");
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var bg = document.createElementNS(SVGNS, "circle");
+    bg.setAttribute("cx", CX); bg.setAttribute("cy", CY); bg.setAttribute("r", R);
+    bg.setAttribute("fill", "none"); bg.setAttribute("stroke", "#EFE9DA");
+    bg.setAttribute("stroke-width", SW);
+    svg.appendChild(bg);
+
+    var legend = $("legend");
+    legend.innerHTML = "";
+
+    if (d.income <= 0){
+      $("donutPct").textContent = "—";
+      var empty = document.createElementNS(SVGNS, "circle");
+      empty.setAttribute("cx", CX); empty.setAttribute("cy", CY); empty.setAttribute("r", R);
+      empty.setAttribute("fill", "none"); empty.setAttribute("stroke", "#E4DECF");
+      empty.setAttribute("stroke-width", SW); empty.setAttribute("stroke-dasharray", "4 7");
+      svg.appendChild(empty);
+      return;
+    }
+
+    var over = d.outflow > d.income ? d.outflow - d.income : 0;
+    var slices = [
+      { label: "생활비", v: d.living, color: "#134E4A" },
+      { label: "저축·투자", v: d.saving, color: "#C89B3C" },
+      { label: "보험료", v: d.premium, color: "#E4694F" },
+      { label: "잔여", v: Math.max(0, d.remain), color: "#E9E3D4" }
+    ];
+    if (over > 0) slices.push({ label: "초과 지출", v: over, color: "#B4341F" });
+
+    var base = 0;
+    slices.forEach(function(s){ base += s.v; });
+    if (base <= 0) base = 1;
+
+    var offset = 0;
+    slices.forEach(function(s){
+      if (s.v <= 0) return;
+      var frac = s.v / base;
+      var len = frac * C;
+      var gap = len > 12 ? 3 : 0;
+      var el = document.createElementNS(SVGNS, "circle");
+      el.setAttribute("cx", CX); el.setAttribute("cy", CY); el.setAttribute("r", R);
+      el.setAttribute("fill", "none");
+      el.setAttribute("stroke", s.color);
+      el.setAttribute("stroke-width", SW);
+      el.setAttribute("stroke-dasharray", Math.max(0, len - gap) + " " + C);
+      el.setAttribute("stroke-dashoffset", -offset);
+      el.setAttribute("transform", "rotate(-90 " + CX + " " + CY + ")");
+      el.setAttribute("stroke-linecap", "butt");
+      svg.appendChild(el);
+      offset += len;
+    });
+
+    var spendRatio = (d.living + d.premium) / d.income * 100;
+    $("donutPct").textContent = over > 0 ? "초과" : pct(spendRatio);
+
+    slices.forEach(function(s){
+      if (s.v <= 0) return;
+      var li = document.createElement("li");
+      var share = s.v / base * 100;
+      li.innerHTML = '<span class="dot" style="background:' + s.color + '"></span>'
+        + '<span class="lg-k">' + s.label + '</span>'
+        + '<span class="lg-v num">' + mw(s.v) + '<em>' + pct(share) + '</em></span>';
+      legend.appendChild(li);
+    });
+  }
+
+  function renderCompare(d){
+    var band = $("barBand"), marker = $("barMarker"), lbl = $("barMarkerLabel"), note = $("compareNote");
+    var MAXP = 20;
+    band.style.left = (state.min / MAXP * 100) + "%";
+    band.style.width = ((state.max - state.min) / MAXP * 100) + "%";
+
+    if (d.income <= 0){
+      marker.style.display = "none";
+      note.textContent = "월 소득을 입력하시면 현재 보험료와 비교해 드립니다.";
+      return;
+    }
+    marker.style.display = "block";
+    var p = d.premium / d.income * 100;
+    var shown = Math.min(Math.max(p, 0), MAXP);
+    var pos = shown / MAXP * 100;
+    marker.style.left = pos + "%";
+
+    var clipped = p > MAXP;
+    lbl.textContent = (clipped ? ">" : "") + mw(d.premium) + " (" + pct(p) + ")";
+    if (pos < 16){
+      lbl.style.left = "0"; lbl.style.transform = "translateX(0)";
+    } else if (pos > 84){
+      lbl.style.left = "auto"; lbl.style.right = "0"; lbl.style.transform = "translateX(0)";
+    } else {
+      lbl.style.left = "50%"; lbl.style.right = "auto"; lbl.style.transform = "translateX(-50%)";
+    }
+
+    note.innerHTML = "적정 범위 <b>" + state.min + "% ~ " + state.max + "%</b> = "
+      + mw(d.minAmt) + " ~ " + mw(d.maxAmt) + " &nbsp;·&nbsp; 현재 보험료 <b>" + mw(d.premium) + "</b> ("
+      + pct(d.ratio) + ")";
+  }
+
+  function renderStrip(d){
+    var strip = $("strip"), label = $("stripLabel");
+    if (d.status === "wait"){
+      strip.className = "strip";
+      label.textContent = "월 기준";
+      $("sMonth").textContent = "—"; $("sYear").textContent = "—"; $("sDecade").textContent = "—";
+      return;
+    }
+    var isOver = d.status === "over";
+    strip.className = "strip" + (isOver ? "" : " ok");
+    label.textContent = isOver ? "월 초과액" : "월 여력";
+    $("sMonth").textContent = (isOver ? "" : "월 ") + mw(d.diff);
+    $("sYear").textContent = won(d.diff * 12 * M);
+    $("sDecade").textContent = won(d.diff * 120 * M);
+  }
+
+  /* ---------- persistence ---------- */
+  function saveMemo(){
+    try {
+      localStorage.setItem(MEMO_KEY, $("memo").value);
+      localStorage.setItem(NAME_KEY, $("clientName").value);
+      var s = $("saveState");
+      s.textContent = "저장됨 · 이 브라우저에만 보관";
+      s.classList.add("on");
+    } catch (e) { /* storage may be blocked */ }
+  }
+  function loadMemo(){
+    try {
+      var m = localStorage.getItem(MEMO_KEY);
+      var n = localStorage.getItem(NAME_KEY);
+      if (m) $("memo").value = m;
+      if (n) $("clientName").value = n;
+      if (m || n){
+        var s = $("saveState");
+        s.textContent = "불러옴 · 이 브라우저에만 보관";
+        s.classList.add("on");
+      }
+    } catch (e) { /* ignore */ }
+  }
+  function saveRate(){
+    try { localStorage.setItem(RATE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function loadRate(){
+    try {
+      var raw = localStorage.getItem(RATE_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      if (o && isFinite(o.min) && isFinite(o.max) && o.min < o.max){
+        state.min = o.min; state.max = o.max;
+        $("rateMin").value = o.min; $("rateMax").value = o.max;
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- events ---------- */
+  ["income","fixed","variable","saving","premium"].forEach(function(id){
+    $(id).addEventListener("input", render);
+  });
+
+  document.querySelectorAll(".chip[data-p]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var v = btn.getAttribute("data-p").split(",");
+      $("income").value = v[0];
+      $("fixed").value = v[1];
+      $("variable").value = v[2];
+      $("saving").value = v[3];
+      $("premium").value = v[4];
+      render();
+      $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  $("resetBtn").addEventListener("click", function(){
+    ["income","fixed","variable","saving","premium"].forEach(function(id){ $(id).value = ""; });
+    render();
+    toast("입력값을 비웠습니다");
+    $("income").focus();
+  });
+
+  $("rateMin").addEventListener("input", function(){
+    var v = parseFloat(this.value);
+    if (v > state.max - 1){ v = state.max - 1; this.value = v; }
+    state.min = v;
+    $("rateMinVal").textContent = v + "%";
+    saveRate(); render();
+  });
+  $("rateMax").addEventListener("input", function(){
+    var v = parseFloat(this.value);
+    if (v < state.min + 1){ v = state.min + 1; this.value = v; }
+    state.max = v;
+    $("rateMaxVal").textContent = v + "%";
+    saveRate(); render();
+  });
+
+  var memoTimer;
+  function onMemoInput(){
+    clearTimeout(memoTimer);
+    memoTimer = setTimeout(saveMemo, 400);
+  }
+  $("memo").addEventListener("input", onMemoInput);
+  $("clientName").addEventListener("input", onMemoInput);
+
+  $("clearMemoBtn").addEventListener("click", function(){
+    if (!confirm("저장된 상담 메모와 고객명을 지울까요?")) return;
+    $("memo").value = ""; $("clientName").value = "";
+    try { localStorage.removeItem(MEMO_KEY); localStorage.removeItem(NAME_KEY); } catch (e) {}
+    var s = $("saveState");
+    s.textContent = "지웠습니다";
+    s.classList.remove("on");
+    toast("메모를 지웠습니다");
+  });
+
+  $("printBtn").addEventListener("click", function(){
+    saveMemo();
+    window.print();
+  });
+
+  function preparePrint(){
+    var d = new Date();
+    var dateStr = d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate();
+    var name = ($("clientName").value || "").trim();
+    $("printHead").textContent = "적정 보험료 진단 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
+    var m = ($("memo").value || "").trim();
+    $("printMemo").textContent = m ? "[상담 메모]\n" + m : "";
+  }
+  window.addEventListener("beforeprint", preparePrint);
+
+  /* ---------- init ---------- */
+  loadRate();
+  $("rateMinVal").textContent = state.min + "%";
+  $("rateMaxVal").textContent = state.max + "%";
+  loadMemo();
+  render();
+})();
+</script>
+</body>
+</html>
