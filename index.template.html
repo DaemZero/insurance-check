@@ -1343,6 +1343,15 @@
     var p = $("questionsPrint");
     if (p) p.textContent = questionsValue();
   }
+  /* 긴 상담 내용도 스크롤 없이 한눈에 보이도록 입력한 만큼 늘린다 */
+  function autoGrowQuestions(){
+    var t = $("questions");
+    if (!t || !t.style) return;
+    var h = t.scrollHeight;
+    if (!h) return;
+    t.style.height = "auto";
+    t.style.height = Math.min(h + 2, 260) + "px";
+  }
 
   /* ---------- persistence ---------- */
   function saveConsult(){
@@ -1443,6 +1452,7 @@
   var consultTimer;
   function onConsultInput(){
     syncQuestions();
+    autoGrowQuestions();
     clearTimeout(consultTimer);
     consultTimer = setTimeout(saveConsult, 400);
   }
@@ -1709,6 +1719,7 @@
   buildInsuranceChips();
   loadConsult();
   syncConsult();
+  autoGrowQuestions();
   render();
 })();
 </script>
