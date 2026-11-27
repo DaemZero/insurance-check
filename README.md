@@ -16,9 +16,11 @@
 
 | 파일 | 쓰임 |
 | --- | --- |
-| `index.template.html` | 편집하는 원본 HTML (사진은 `__PHOTO_DATA_URI__` 자리표시자) |
+| `index.template.html` | 편집하는 원본 HTML (사진은 `__PHOTO_DATA_URI__`, PLAN H 마크는 `__PLANH_DATA_URI__` 자리표시자) |
 | `index.html` | `build.py`가 만든 배포본 — 직접 고치지 마세요 |
-| `build.py` | 사진 리사이즈·base64 인라인 → `index.html` + `downloads/2026-11-27/지출_적정보험료_진단.html` |
+| `build.py` | 사진·PLAN H 마크 리사이즈·base64 인라인 → `index.html` + `downloads/2026-11-27/지출_적정보험료_진단.html` |
+| `make_planh_mark.py` | 유저가 준 현대홈쇼핑 PLAN H 마크 JPEG를 크롭·순백 정리·640px PNG로 → `assets/planh_mark.png`(마스터) + `assets/planh_mark_640.webp`(인라인용) |
+| `assets/planh_mark.png` | 상단 헤더 흰 배지에 들어가는 마크 640×493 PNG |
 | `make_brand_assets.py` | `og-image.png`(1200×630), `favicon.png`, `apple-touch-icon.png`, 사진 썸네일 생성 |
 | `assets/photo_card.png` | 명함 사진 원본 554×680 (저장소 안에서 관리) |
 | `assets/photo_card_240.webp` | 표시 크기의 2.5배 리사이즈본 — 빌드가 매번 다시 만듭니다 |
@@ -28,7 +30,7 @@
 ## 수정·배포 방법
 
 1. `index.template.html`을 고칩니다. (사진을 바꿀 때는 `assets/photo_card.png` 교체)
-2. `python3 build.py` — 사진(WebP 240×288, 약 5KB)과 파비콘을 인라인한 `index.html`(약 60KB)을 만듭니다.
+2. `python3 build.py` — 사진(WebP 240×288, 약 5KB)·PLAN H 마크(WebP 640px, 약 29KB)·파비콘을 인라인한 `index.html`(약 122KB)을 만듭니다.
 3. `python3 test_logic.py` — 계산·표시 로직을 검증합니다.
 4. `./deploy.sh` — `git push origin main`, `git push origin main:gh-pages`를 함께 수행합니다.
    GitHub Pages가 `gh-pages` 브랜치를 바라보고 있어 두 브랜치 모두 올려야 실제 주소에 반영됩니다.
