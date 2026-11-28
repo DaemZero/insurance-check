@@ -881,9 +881,8 @@
         <label class="field">
           <span class="f-label">연락처 <em>필수</em></span>
           <span class="f-input sm">
-            <input id="sendContact" type="text" inputmode="tel" autocomplete="tel" placeholder="010-1234-5678 또는 카톡 ID" aria-label="고객 연락처">
+            <input id="sendContact" type="text" inputmode="tel" autocomplete="tel" placeholder="예) 010-1234-5678" aria-label="고객 연락처">
           </span>
-          <span class="f-hint">연락받으실 휴대폰 번호나 카톡 ID</span>
         </label>
       </div>
 
@@ -937,9 +936,9 @@
           <span>Fax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0504-268-3205</span>
         </div>
         <div class="nc-line">
-          <p>어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.</p>
-          <p>과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내합니다.</p>
-          <p>예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.</p>
+          <p>💮어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.</p>
+          <p>💮과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내하겠습니다.</p>
+          <p>💮예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.</p>
         </div>
       </div>
     </section>
@@ -1606,10 +1605,10 @@
       msg = "<b>성함</b>을 입력해 주세요.";
       focusId = "sendName";
     } else if (!contactValue()){
-      msg = "<b>연락처</b>를 입력해 주세요. 휴대폰 번호나 카톡 ID 중 편한 쪽으로 적어 주시면 됩니다.";
+      msg = "<b>연락처</b>를 입력해 주세요. 연락받으실 휴대폰 번호를 적어 주시면 됩니다.";
       focusId = "sendContact";
     } else if (contactValue().length < 4){
-      msg = "<b>연락처</b>가 너무 짧습니다. 연락받으실 번호나 카톡 ID를 정확히 한 번 더 확인해 주세요.";
+      msg = "<b>연락처</b>가 너무 짧습니다. 연락받으실 휴대폰 번호를 정확히 한 번 더 확인해 주세요.";
       focusId = "sendContact";
     } else if (!($("sendConsent") && $("sendConsent").checked)){
       msg = "진단 내용 전송에 대한 <b>동의</b>에 체크해 주세요.";

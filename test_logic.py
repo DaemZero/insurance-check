@@ -496,13 +496,22 @@ assert '[1분 보험료 건강검진]' in code, "FormSubmit 메일 제목 접두
 assert "1분 보험료 건강검진 결과" not in code, "인쇄 1쪽 머리말에 지우기로 한 문구가 남아 있습니다"
 assert "class=\"eyebrow\"" not in html, "히어로 배지(eyebrow)가 남아 있습니다"
 sentences = [
-    "어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.",
-    "과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내합니다.",
-    "예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.",
+    "💮어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.",
+    "💮과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내하겠습니다.",
+    "💮예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.",
 ]
 for s in sentences:
     assert s in html, "명함 문구 누락 또는 오타: %s" % s
     assert s in tpl, "명함 문구 누락 또는 오타(template): %s" % s
+assert "안내합니다." not in tpl, "명함 2번째 문장이 '안내합니다.'로 남아 있습니다"
+assert tpl.count("💮") == 3 and html.count("💮") == 3, \
+    "명함 문장 💮 개수가 3개가 아닙니다 (template %d / html %d)" % (tpl.count("💮"), html.count("💮"))
+
+# 04번 연락처: '카톡 ID' 표현 삭제 → 휴대폰 번호 기준으로만 안내
+assert "카톡 ID" not in tpl and "카톡ID" not in tpl, "04번 연락처에 카톡 ID 문구가 남아 있습니다(template)"
+assert "카톡 ID" not in html and "카톡ID" not in html, "04번 연락처에 카톡 ID 문구가 남아 있습니다(index.html)"
+assert 'placeholder="예) 010-1234-5678"' in tpl, "04번 연락처 placeholder가 휴대폰 번호 예시가 아닙니다"
+assert "연락받으실 휴대폰 번호나" not in tpl, "04번 연락처 아래 보조 안내 문구가 남아 있습니다"
 assert 'id="clientName"' in html and '<label class="f-label" for="clientName">성함</label>' in html, \
     "03번 성함 칸(라벨 '성함')이 없습니다"
 assert 'placeholder="자유롭게 기재해주세요"' in html, "궁금하신 사항 placeholder가 없습니다"
@@ -547,5 +556,6 @@ print(json.dumps({"tag": "html-checks", "ok": True, "checks": [
     "예시 프리셋 없음", "성함 라벨", "자유롭게 기재해주세요", "상담보험 17항목(순서·라벨 일치)",
     "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 한국어 필드",
     "7~12% 고정", "저장 안내 문구·히어로 배지 없음", "내용 초기화",
-    "명함 3문장", "인쇄 머리말에서 1분 보험료 건강검진 제거"]},
+    "명함 3문장(💮·안내하겠습니다)", "연락처 카톡 ID 문구·보조 안내 삭제",
+    "인쇄 머리말에서 1분 보험료 건강검진 제거"]},
     ensure_ascii=False))
