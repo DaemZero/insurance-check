@@ -53,22 +53,13 @@ function __match(el, sel){
 var __ids = ["income","fixed","variable","saving","premium","resultCard","basisText",
   "statusBox","deficitWarn","deficitWarnText","statusKicker","statusAmount","statusDesc","tOutflow","tRemain","tRatio",
   "donut","donutPct","legend","barBand","barMarker","barMarkerLabel","compareNote",
-  "strip","stripLabel","sMonth","sYear","sDecade","basisChip","rateMin","rateMax",
-  "rateMinVal","rateMaxVal","clientName","questions","saveState","toast","printHead","printMemo",
+  "strip","stripLabel","sMonth","sYear","sDecade","basisChip","clientName","questions","toast","printHead","printMemo",
   "memoCard","insChips","insPrint","timePrint","methodPrint","questionsPrint","hourSel","sendCard",
   "printHint","printHintText","printHintClose",
   "sendName","sendContact","sendConsent","sendBtn","sendStatus","sendStatusText",
   "resetBtn","clearMemoBtn","printBtn"];
 __ids.forEach(function(id){ var e = new El(id); __els[id] = e; __all.push(e); });
-__els.rateMin.value = "7"; __els.rateMax.value = "10";
 __els.hourSel.disabled = true;
-var __chips = [];
-[["30대 직장인","350,110,60,50,13"],["40대 외벌이","450,150,80,60,48"],
- ["50대 자영업","380,120,70,30,32"],["60대","220,90,50,20,18"]].forEach(function(row){
-  var c = new El("chip-" + row[0]);
-  c.className = "chip"; c["data-p"] = row[1];
-  __chips.push(c); __all.push(c);
-});
 function __mk(id, cls, attrs){
   var e = new El(id); e.className = cls;
   for (var k in attrs){ if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]); }
@@ -159,10 +150,6 @@ CHECK = r"""
       __els[k].value = String(vals[i]); __els[k].fire("input");
     });
   }
-  function chipByLabel(label){
-    for (var i = 0; i < __chips.length; i++){ if (__chips[i]["data-p"] === label) return __chips[i]; }
-    return null;
-  }
   snap("initial(empty)");
   set([350,110,60,50,13]); snap("preset1");
   set([450,150,80,60,48]); snap("preset2");
@@ -173,17 +160,18 @@ CHECK = r"""
   set([1000,100,50,50,150]); snap("big-income");
   set([250,100,50,20,45]); snap("edge-20pct-band");
 
-  /* 60대 예시 칩 */
-  var c60 = null;
-  for (var j = 0; j < __chips.length; j++){
-    if (__chips[j].id === "chip-60대") c60 = __chips[j];
-  }
-  c60.fire("click");
-  snap("60대 예시 클릭");
+  /* 적정 비율 기준은 7~12% 고정 — 기준을 바꾸는 UI가 없다 */
+  out.push({tag: "fixed-basis",
+    basis: __els.basisText.textContent, chip: __els.basisChip.textContent,
+    band: __els.barBand.style.left + " +" + __els.barBand.style.width,
+    rateControls: document.querySelectorAll("#rateMin, #rateMax").length});
+  set([350,110,60,50,13]); snap("fixed-basis-sample");
 
-  __els.rateMin.value = "5"; __els.rateMin.fire("input");
-  __els.rateMax.value = "13"; __els.rateMax.fire("input");
-  set([350,110,60,50,13]); snap("custom-rate 5-13%");
+  /* ---- 상담 정보 안내 문구/버튼 이름 ---- */
+  out.push({tag: "memo-ui",
+    saveState: !!__els.saveState,
+    clearBtn: "(html에서 확인)",
+    printed: __printed});
 
   /* ---- 03 상담 정보: 상담보험 다중 선택 ---- */
   var insChips = __els.insChips.childs;
@@ -279,7 +267,7 @@ CHECK = r"""
     saved_name: localStorage.getItem("daemin_consult_client_v1"),
     saved_ins: localStorage.getItem("daemin_consult_insurance_v1")});
 
-  /* ---- 상담 정보 지우기 ---- */
+  /* ---- 내용 초기화 ---- */
   __els.clearMemoBtn.fire("click");
   out.push({tag: "clear-consult",
     name: __els.clientName.value, sendName: __els.sendName.value,
@@ -304,6 +292,19 @@ rows = json.loads(res)
 for row in rows:
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()
+
+# ---- 적정 비율 기준은 7~12% 고정 ----
+_fixed = [r for r in rows if r["tag"] == "fixed-basis"][0]
+assert _fixed["basis"] == "적정 보험료 = 월 소득의 7~12%", "기준 문구가 7~12%가 아닙니다: %s" % _fixed["basis"]
+assert _fixed["chip"] == "7% ~ 12%", "기준 배지가 7%~12%가 아닙니다: %s" % _fixed["chip"]
+assert _fixed["band"] == "35% +25%", "차트 기준띠가 7~12%(35%%~60%%)가 아닙니다: %s" % _fixed["band"]
+assert _fixed["rateControls"] == 0, "적정 비율 기준을 바꾸는 컨트롤이 남아 있습니다"
+_sample = [r for r in rows if r["tag"] == "fixed-basis-sample"][0]
+assert "7% ~ 12%" in _sample["note"], "결과 문구의 기준이 7~12%가 아닙니다: " + _sample["note"]
+assert "7% ~ 12%" in _sample["note"], _sample["note"]
+print(json.dumps({"tag": "fixed-basis-7-12", "ok": True, "basis": _fixed["basis"],
+                  "band": _fixed["band"]}, ensure_ascii=False))
+print()
 
 # ---- 상담보험 17종: 유저가 지정한 정확한 순서·라벨인지 ----
 _order = [r for r in rows if r["tag"] == "ins-chip-order"][0]
@@ -382,8 +383,7 @@ RESTORE_CHECK = r"""
     hour: __els.hourSel.value,
     hourDisabled: !!__els.hourSel.disabled,
     timePrint: __els.timePrint.textContent,
-    methodPrint: __els.methodPrint.textContent,
-    saveState: __els.saveState.textContent
+    methodPrint: __els.methodPrint.textContent
   }]);
 })()
 """
@@ -475,9 +475,34 @@ for row in json.loads(dukpy.evaljs(js4)):
     print(json.dumps(row, ensure_ascii=False, indent=None))
     print()
 
-# ---- HTML 자체 검사: 60대 예시·03번 필드·인쇄 요약·전송 필드명 ----
+# ---- HTML 자체 검사: 예시 프리셋·기준·문구·03번 필드·전송 필드명 ----
 tpl = (ROOT / "index.template.html").read_text(encoding="utf-8")
-assert re.search(r'data-p="220,90,50,20,18">60대<', html), "01번 예시에 60대 칩이 없습니다"
+assert 'data-p=' not in html, "01번 예시 프리셋 버튼이 남아 있습니다"
+assert "30대 직장인" not in html and "60대" not in html, "예시 문구가 화면에 남아 있습니다"
+for gone in ("불러옴", "이 브라우저에만", "상담 정보 지우기",
+             "고객 성함", "가입보다 이해가"):
+    assert gone not in tpl, "지우기로 한 문구가 남아 있습니다: %s" % gone
+assert '<div class="eyebrow">1분 보험료 건강검진</div>' not in tpl, "히어로 배지 문구가 남아 있습니다"
+assert "1분 보험료 건강검진" not in html.split("<body>")[1].split("<script>")[0], \
+    "본문(히어로)에 '1분 보험료 건강검진' 문구가 남아 있습니다"
+assert "적정 보험료 = 월 소득의 7~12%" in tpl, "02번 기준 문구가 7~12%가 아닙니다"
+assert 'id="rateMin"' not in html and 'id="rateMax"' not in html, "적정 비율 기준 조절 UI가 남아 있습니다"
+assert '<b id="basisChip">7% ~ 12%</b>' in tpl, "적정 비율 기준 배지가 7% ~ 12%가 아닙니다"
+assert "saveState" not in html, "저장 상태 안내 배지가 남아 있습니다"
+assert 'id="clearMemoBtn">내용 초기화<' in html, "03번 버튼이 '내용 초기화'가 아닙니다"
+assert '<span class="f-label">성함 <em>필수' in html, "04번 라벨이 '성함'이 아닙니다"
+assert 'id="resetBtn"' in html, "01번 입력값 초기화 버튼이 없습니다"
+assert '[1분 보험료 건강검진]' in code, "FormSubmit 메일 제목 접두어가 사라졌습니다"
+assert "1분 보험료 건강검진 결과" not in code, "인쇄 1쪽 머리말에 지우기로 한 문구가 남아 있습니다"
+assert "class=\"eyebrow\"" not in html, "히어로 배지(eyebrow)가 남아 있습니다"
+sentences = [
+    "어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.",
+    "과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내합니다.",
+    "예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.",
+]
+for s in sentences:
+    assert s in html, "명함 문구 누락 또는 오타: %s" % s
+    assert s in tpl, "명함 문구 누락 또는 오타(template): %s" % s
 assert 'id="clientName"' in html and '<label class="f-label" for="clientName">성함</label>' in html, \
     "03번 성함 칸(라벨 '성함')이 없습니다"
 assert 'placeholder="자유롭게 기재해주세요"' in html, "궁금하신 사항 placeholder가 없습니다"
@@ -503,6 +528,13 @@ for token in ['id="insPrint"', 'id="timePrint"', 'id="methodPrint"', 'id="questi
 for field in ['"상담보험"', '"궁금하신 사항"', '"연락가능시간"', '"연락방법"']:
     assert field in code, "전송 payload 한국어 필드 누락: %s" % field
 assert '"상담 메모":' not in code, "예전 단일 메모 필드가 payload에 남아 있습니다"
+assert '"성함": name' in code, "전송 payload의 성함 필드 이름이 다릅니다"
+_send = [r for r in json.loads(dukpy.evaljs(js4)) if r["tag"] == "send-valid"][0]
+assert _send["payload"]["성함"] == "테스트 고객", "payload 성함 값이 다릅니다: %s" % _send["payload"].get("성함")
+assert "고객 성함" not in _send["keys"], "payload에 '고객 성함' 필드가 남아 있습니다"
+assert _send["payload"]["적정 범위"].startswith("7% ~ 12%"), \
+    "payload 적정 범위가 7~12%가 아닙니다: %s" % _send["payload"]["적정 범위"]
+assert _send["payload"]["_subject"].startswith("[1분 보험료 건강검진] "), "메일 제목 접두어가 바뀌었습니다"
 
 # ---- 페이지 소스에 개인 메일 주소가 그대로 노출되지 않는지 ----
 assert "formsubmit.co/ajax/3c7935155d1f7bb34b9ca963ae2c4df6" in html, \
@@ -512,6 +544,8 @@ assert "kdm320538@gmail.com" not in html, \
 print(json.dumps({"tag": "no-plain-email-in-page", "ok": True, "endpoint": "formsubmit 별칭"},
                  ensure_ascii=False))
 print(json.dumps({"tag": "html-checks", "ok": True, "checks": [
-    "60대 예시 칩", "성함 라벨", "자유롭게 기재해주세요", "상담보험 17항목(순서·라벨 일치)",
-    "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 4개 한국어 필드"]},
+    "예시 프리셋 없음", "성함 라벨", "자유롭게 기재해주세요", "상담보험 17항목(순서·라벨 일치)",
+    "오전/오후·시·00/30분", "전화/문자", "인쇄 요약 4종", "payload 한국어 필드",
+    "7~12% 고정", "저장 안내 문구·히어로 배지 없음", "내용 초기화",
+    "명함 3문장", "인쇄 머리말에서 1분 보험료 건강검진 제거"]},
     ensure_ascii=False))

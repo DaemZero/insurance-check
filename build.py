@@ -4,9 +4,10 @@
 - 명함 사진을 표시 크기의 2.5배(240x288) WebP로 줄여 base64로 인라인
 - 현대홈쇼핑 PLAN H 마크(assets/planh_mark.png 640px)를 WebP로 담아 인라인
 - 파비콘(1KB PNG)도 base64 data URI로 인라인 → 페이지가 외부 요청을 전혀 하지 않는다
-- 결과: index.html (저장소 루트) + downloads/2026-11-27/지출_적정보험료_진단.html
+- 결과: index.html (저장소 루트) + downloads/{오늘 날짜}/지출_적정보험료_진단.html
 """
 import base64
+import datetime
 import pathlib
 import shutil
 
@@ -22,7 +23,7 @@ PHOTO_WEBP = ASSETS / "photo_card_240.webp"    # 빌드가 만드는 인라인�
 MARK_PNG = ASSETS / "planh_mark.png"          # 현대홈쇼핑 PLAN H 마크 640px 마스터
 MARK_WEBP = ASSETS / "planh_mark_640.webp"    # 빌드가 만드는 인라인용
 FAVICON = HERE / "favicon.png"
-DEST_DIR = HERE.parent / "downloads" / "2026-11-27"
+DEST_DIR = HERE.parent / "downloads" / datetime.date.today().isoformat()
 DEST = DEST_DIR / "지출_적정보험료_진단.html"
 
 

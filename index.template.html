@@ -81,10 +81,6 @@
     position:absolute;left:24px;right:24px;bottom:0;height:2px;
     background:linear-gradient(90deg, rgba(217,181,102,0), var(--gold-soft), rgba(217,181,102,0));
   }
-  .eyebrow{
-    font-size:11.5px;letter-spacing:.07em;color:var(--gold-soft);
-    font-weight:700;margin-bottom:12px;
-  }
   .hero h1{
     margin:0 0 10px;
     font-size:clamp(26px, 6.6vw, 34px);
@@ -134,6 +130,15 @@
     margin:2px 0 2px;font-size:19px;line-height:1.3;font-weight:800;letter-spacing:-.01em;
   }
   .sec-head p{margin:0;font-size:13.5px;color:var(--muted);}
+  /* 01번 입력값만 비우는 작은 버튼(예시 프리셋을 없앤 자리) */
+  .sec-reset{
+    margin-left:auto;flex:0 0 auto;align-self:center;
+    font:inherit;font-size:12.5px;font-weight:700;color:var(--muted);
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:6px 12px;cursor:pointer;transition:.15s;
+  }
+  .sec-reset:hover{color:var(--teal-800);border-color:#CFDCD8;background:#F2F7F5;}
+  .sec-reset:active{transform:translateY(1px);}
 
   /* ---------- fields ---------- */
   .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:14px;}
@@ -166,17 +171,6 @@
   .f-input input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
   .unit{flex:0 0 auto;font-size:13.5px;font-weight:700;color:var(--muted);}
   .f-hint{font-size:12.5px;color:var(--muted);line-height:1.45;}
-
-  .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);}
-  .chip-label{font-size:12.5px;font-weight:800;color:var(--gold);letter-spacing:.02em;margin-right:2px;}
-  .chip{
-    font:inherit;font-size:13px;font-weight:700;color:var(--teal-800);
-    background:#F1F6F4;border:1px solid #D6E4E0;border-radius:999px;
-    padding:8px 13px;cursor:pointer;transition:.15s;
-  }
-  .chip:hover{background:#E6F0EC;}
-  .chip:active{transform:translateY(1px);}
-  .chip.ghost{color:var(--ink-soft);background:#fff;border-color:var(--line);}
 
   /* ---------- status ---------- */
   .status{
@@ -285,19 +279,13 @@
   .strip .hl b{color:var(--coral-deep);}
   .strip.ok .hl b{color:var(--teal-700);}
 
-  /* ---------- basis (sliders) ---------- */
+  /* ---------- basis (7~12% 고정 안내) ---------- */
   .basis{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);}
-  .basis-head{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px;}
+  .basis-head{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--ink-soft);margin:0;}
   .basis-head b{
     font-size:12.5px;color:var(--teal-800);background:#EDF6F3;border:1px solid #CDE5DE;
     border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums;
   }
-  .basis-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
-  .basis-row label{flex:0 0 52px;font-size:12.5px;font-weight:700;color:var(--muted);}
-  .basis-row input[type=range]{
-    flex:1 1 auto;min-width:0;accent-color:var(--teal-700);height:26px;cursor:pointer;
-  }
-  .basis-row output{flex:0 0 46px;text-align:right;font-size:13px;font-weight:800;color:var(--teal-800);font-variant-numeric:tabular-nums;}
 
   /* ---------- memo (03 상담 정보) ---------- */
   .memo-grid{display:grid;gap:15px;}
@@ -348,9 +336,7 @@
   }
   .print-val{font-size:15px;font-weight:700;color:var(--ink);line-height:1.5;}
   .qprint{display:none;}
-  .memo-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;}
-  .save-state{font-size:12px;font-weight:700;color:var(--muted);}
-  .save-state.on{color:var(--teal-700);}
+  .memo-foot{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:12px;}
 
   /* ---------- buttons ---------- */
   .btn{
@@ -456,6 +442,8 @@
   }
   .nc-meta{margin-top:12px;font-size:12px;color:#A9CAC4;font-weight:600;display:flex;flex-direction:column;gap:2px;word-break:break-all;}
   .nc-line{margin:14px 0 0;padding-top:13px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:#CFE6E1;line-height:1.6;}
+  .nc-line p{margin:0;word-break:keep-all;}
+  .nc-line p + p{margin-top:6px;}
   .nc-line b{color:#fff;font-weight:800;}
 
   /* ---------- footer / toast ---------- */
@@ -518,7 +506,8 @@
       border:.3mm solid #E4DCCB;
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
-    .eyebrow{font-size:7.6pt;letter-spacing:.05em;margin-bottom:1.3mm;}
+    .memo-grid input:focus, .memo-grid textarea:focus{border-color:#DDD6C6 !important;background:#fff !important;box-shadow:none !important;}
+    .f-input:focus-within{border-color:#DDD6C6 !important;background:#FDFCF8 !important;box-shadow:none !important;}
     #printHead{margin:0 0 2.4mm !important;font-size:8.4pt !important;}
 
     /* 카드 공통 */
@@ -583,7 +572,7 @@
 
     /* 2장 · 상담 메모부터 새 장 */
     #memoCard{break-before:page;}
-    .memo-grid{gap:5.1mm;}
+    .memo-grid{gap:4.2mm;}
     .memo-block{gap:1.9mm;}
     .memo-grid input[type=text], .memo-grid textarea{
       font-size:12.1pt;border:1px solid #DDD6C6 !important;background:#fff !important;
@@ -593,7 +582,7 @@
     .qprint{
       display:block !important;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
       border:1px solid #DDD6C6;border-radius:2.1mm;background:#fff;
-      min-height:35.4mm;padding:2.6mm 2.8mm;font-size:12.1pt;line-height:1.55;color:#12211F;
+      min-height:31mm;padding:2.6mm 2.8mm;font-size:12.1pt;line-height:1.55;color:#12211F;
     }
     #memoCard .f-label em{display:none !important;}
     #memoCard .f-label{font-size:9.8pt;}
@@ -604,25 +593,26 @@
     .memo-foot .actions{display:none !important;}
 
     /* 명함 */
-    .namecard{padding:7mm 6.5mm;border-radius:3.3mm;}
+    .namecard{padding:5.8mm 6.5mm;border-radius:3.3mm;}
     .nc-top{gap:5.6mm;}
     .nc-photo{width:35.4mm;height:41mm;border-radius:2.8mm;border-width:1.1pt;}
     .nc-role{font-size:8.9pt;margin-bottom:1.5mm;}
     .nc-name{font-size:25.2pt;margin:0 0 1.5mm;}
     .nc-name span{font-size:12.6pt;}
     .nc-org{font-size:13pt;}
-    .nc-body{margin-top:5.1mm;}
+    .nc-body{margin-top:4.2mm;}
     .nc-phone{padding:4.2mm 5.6mm;border-radius:2.8mm;}
     .nc-phone .p-num{font-size:22.4pt;}
     .nc-phone .p-cap{font-size:10.3pt;}
     .nc-phone .p-ico{width:11.2mm;height:11.2mm;}
     .nc-phone .p-ico svg{width:5.6mm;height:5.6mm;}
-    .nc-tags{gap:2.1mm;margin-top:3.7mm;}
+    .nc-tags{gap:2.1mm;margin-top:3.2mm;}
     .nc-tags span{font-size:9.8pt;padding:1.2mm 2.8mm;}
-    .nc-meta{margin-top:4.2mm;font-size:9.8pt;flex-direction:row;gap:9.3mm;}
-    .nc-line{margin-top:4.2mm;padding-top:3.7mm;font-size:11.2pt;}
+    .nc-meta{margin-top:3.4mm;font-size:9.8pt;flex-direction:row;gap:9.3mm;}
+    .nc-line{margin-top:3.6mm;padding-top:3mm;font-size:11pt;}
+    .nc-line p + p{margin-top:.9mm;}
 
-    footer{font-size:8.2pt;padding:5.1mm 1mm 0;line-height:1.58;word-break:keep-all;}
+    footer{font-size:8.2pt;padding:4mm 1mm 0;line-height:1.5;word-break:keep-all;}
 </style>
 </head>
 <body>
@@ -631,7 +621,6 @@
   <header class="hero">
     <div class="hero-inner">
       <div class="hero-copy">
-        <div class="eyebrow">1분 보험료 건강검진</div>
         <h1>내 보험료, 지금 딱 맞을까?</h1>
         <p class="hero-sub">현대홈쇼핑GA · 금융플래너 김대민</p>
         <p class="hero-desc">월 소득과 지출을 입력하시면, 지금 내는 보험료가 적정한 수준인지 바로 확인하실 수 있습니다.</p>
@@ -654,6 +643,7 @@
           <h2>소득과 지출</h2>
           <p>월 기준 · 단위는 만원입니다</p>
         </div>
+        <button type="button" class="sec-reset no-print" id="resetBtn">초기화</button>
       </div>
 
       <div class="fields">
@@ -703,14 +693,6 @@
         </label>
       </div>
 
-      <div class="chips no-print">
-        <span class="chip-label">예시</span>
-        <button type="button" class="chip" data-p="350,110,60,50,13">30대 직장인</button>
-        <button type="button" class="chip" data-p="450,150,80,60,48">40대 외벌이</button>
-        <button type="button" class="chip" data-p="380,120,70,30,32">50대 자영업</button>
-        <button type="button" class="chip" data-p="220,90,50,20,18">60대</button>
-        <button type="button" class="chip ghost" id="resetBtn">초기화</button>
-      </div>
     </section>
 
     <!-- ============ 02 결과 ============ -->
@@ -719,7 +701,7 @@
         <div class="sec-num">02</div>
         <div>
           <h2>진단 결과</h2>
-          <p id="basisText">적정 보험료 = 월 소득의 7~10%</p>
+          <p id="basisText">적정 보험료 = 월 소득의 7~12%</p>
         </div>
       </div>
 
@@ -787,17 +769,7 @@
       </div>
 
       <div class="basis no-print">
-        <div class="basis-head">적정 비율 기준 <b id="basisChip">7% ~ 10%</b></div>
-        <div class="basis-row">
-          <label for="rateMin">하한</label>
-          <input type="range" id="rateMin" min="3" max="15" step="0.5" value="7" aria-label="적정 보험료 하한 비율">
-          <output id="rateMinVal">7%</output>
-        </div>
-        <div class="basis-row">
-          <label for="rateMax">상한</label>
-          <input type="range" id="rateMax" min="5" max="20" step="0.5" value="10" aria-label="적정 보험료 상한 비율">
-          <output id="rateMaxVal">10%</output>
-        </div>
+        <div class="basis-head">적정 비율 기준 <b id="basisChip">7% ~ 12%</b></div>
       </div>
     </section>
 
@@ -870,9 +842,8 @@
         </div>
       </div>
       <div class="memo-foot">
-        <span class="save-state no-print" id="saveState">입력하면 자동 저장됩니다</span>
         <div class="actions no-print" style="margin:0;">
-          <button type="button" class="btn btn-ghost" id="clearMemoBtn">상담 정보 지우기</button>
+          <button type="button" class="btn btn-ghost" id="clearMemoBtn">내용 초기화</button>
           <button type="button" class="btn btn-primary" id="printBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
             인쇄 / PDF 저장
@@ -902,9 +873,9 @@
 
       <div class="send-grid">
         <label class="field">
-          <span class="f-label">고객 성함 <em>필수</em></span>
+          <span class="f-label">성함 <em>필수</em></span>
           <span class="f-input sm">
-            <input id="sendName" type="text" autocomplete="name" placeholder="예) 홍길동" aria-label="고객 성함">
+            <input id="sendName" type="text" autocomplete="name" placeholder="예) 홍길동" aria-label="성함">
           </span>
         </label>
         <label class="field">
@@ -965,7 +936,11 @@
           <span>E-mail &nbsp;22408036@hyundaihmall.com</span>
           <span>Fax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0504-268-3205</span>
         </div>
-        <p class="nc-line">가입보다 이해가 먼저 — <b>기존 보험은 지키고, 빈틈만 채워 드립니다.</b></p>
+        <div class="nc-line">
+          <p>어려운 보험 약관은 알기 쉽게 풀어드리고, 객관적인 비교분석으로 합리적인 기준을 제시하겠습니다.</p>
+          <p>과장된 권유 대신 투명한 기준과 정직한 설명으로 꼭 맞는 보장만을 안내합니다.</p>
+          <p>예기치 못한 위기 앞에서도 소중한 일상이 무너지지 않도록 끝까지 곁을 지키겠습니다.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -991,14 +966,13 @@
   var Q_KEY = "daemin_consult_questions_v1";
   var TIME_KEY = "daemin_consult_time_v1";
   var METHOD_KEY = "daemin_consult_method_v1";
-  var RATE_KEY = "daemin_consult_rate_v1";
   var INSURANCES = ["종합보험","실손의료비보험","암보험","뇌/심장보험","수술비보험",
     "상해보험","간병보험","태아보험","운전자보험","화재보험","치매보험",
     "치아보험","펫보험","종신보험","연금보험","보장점검","기타"];
   var consult = { ins: [], mer: "", hour: "", minute: "", method: "" };
   var insBtns = {};
   var R = 78, CX = 100, CY = 100, SW = 26, C = 2 * Math.PI * R;
-  var state = { min: 7, max: 10 };
+  var state = { min: 7, max: 12 };   /* 적정 보험료 비율 기준 — 7%~12% 고정 */
 
   /* ---------- formatting ---------- */
   function num(id){
@@ -1273,12 +1247,6 @@
   }
 
   /* ---------- 03 상담 정보 ----------------------------- */
-  function setSaveState(msg, on){
-    var s = $("saveState");
-    if (!s) return;
-    s.textContent = msg;
-    if (on) s.classList.add("on"); else s.classList.remove("on");
-  }
   function questionsValue(){
     return (($("questions") && $("questions").value) || "").trim();
   }
@@ -1399,23 +1367,20 @@
       localStorage.setItem(Q_KEY, ($("questions") && $("questions").value) || "");
       localStorage.setItem(TIME_KEY, JSON.stringify({ mer: consult.mer, hour: consult.hour, minute: consult.minute }));
       localStorage.setItem(METHOD_KEY, consult.method);
-      setSaveState("저장됨 · 이 브라우저에만 보관", true);
     } catch (e) { /* storage may be blocked */ }
   }
   function loadConsult(){
-    var any = false;
     try {
       var n = localStorage.getItem(NAME_KEY);
-      if (n) { $("clientName").value = n; any = true; }
+      if (n) $("clientName").value = n;
       var q = localStorage.getItem(Q_KEY);
-      if (q) { $("questions").value = q; any = true; }
+      if (q) $("questions").value = q;
       var ins = localStorage.getItem(INS_KEY);
       if (ins){
         var arr = JSON.parse(ins);
         if (arr && arr.length){
           consult.ins = arr.filter(function(x){ return INSURANCES.indexOf(x) >= 0; });
           sortIns();
-          if (consult.ins.length) any = true;
         }
       }
       var t = localStorage.getItem(TIME_KEY);
@@ -1425,27 +1390,11 @@
           consult.mer = o.mer || "";
           consult.hour = o.hour || "";
           consult.minute = o.minute || "";
-          if (consult.mer) any = true;
         }
       }
       var m = localStorage.getItem(METHOD_KEY);
-      if (m){ consult.method = m; any = true; }
+      if (m) consult.method = m;
     } catch (e) { /* ignore */ }
-    if (any) setSaveState("불러옴 · 이 브라우저에만 보관", true);
-  }
-  function saveRate(){
-    try { localStorage.setItem(RATE_KEY, JSON.stringify(state)); } catch (e) {}
-  }
-  function loadRate(){
-    try {
-      var raw = localStorage.getItem(RATE_KEY);
-      if (!raw) return;
-      var o = JSON.parse(raw);
-      if (o && isFinite(o.min) && isFinite(o.max) && o.min < o.max){
-        state.min = o.min; state.max = o.max;
-        $("rateMin").value = o.min; $("rateMax").value = o.max;
-      }
-    } catch (e) {}
   }
 
   /* ---------- events ---------- */
@@ -1453,39 +1402,11 @@
     $(id).addEventListener("input", render);
   });
 
-  document.querySelectorAll(".chip[data-p]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var v = btn.getAttribute("data-p").split(",");
-      $("income").value = v[0];
-      $("fixed").value = v[1];
-      $("variable").value = v[2];
-      $("saving").value = v[3];
-      $("premium").value = v[4];
-      render();
-      $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-
   $("resetBtn").addEventListener("click", function(){
     ["income","fixed","variable","saving","premium"].forEach(function(id){ $(id).value = ""; });
     render();
     toast("입력값을 비웠습니다");
     $("income").focus();
-  });
-
-  $("rateMin").addEventListener("input", function(){
-    var v = parseFloat(this.value);
-    if (v > state.max - 1){ v = state.max - 1; this.value = v; }
-    state.min = v;
-    $("rateMinVal").textContent = v + "%";
-    saveRate(); render();
-  });
-  $("rateMax").addEventListener("input", function(){
-    var v = parseFloat(this.value);
-    if (v < state.min + 1){ v = state.min + 1; this.value = v; }
-    state.max = v;
-    $("rateMaxVal").textContent = v + "%";
-    saveRate(); render();
   });
 
   var consultTimer;
@@ -1510,7 +1431,7 @@
   if ($("hourSel")) $("hourSel").addEventListener("change", onHourChange);
 
   $("clearMemoBtn").addEventListener("click", function(){
-    if (!confirm("저장된 상담 정보(성함·상담보험·궁금하신 사항·연락가능시간·연락방법)를 지울까요?")) return;
+    if (!confirm("입력한 상담 내용(성함·상담보험·궁금하신 사항·연락가능시간·연락방법)을 모두 지울까요?")) return;
     $("clientName").value = "";
     if ($("questions")) $("questions").value = "";
     if ($("sendName")) $("sendName").value = "";
@@ -1523,8 +1444,7 @@
       localStorage.removeItem(METHOD_KEY);
     } catch (e) {}
     syncInsurance(); syncTime(); syncMethod();
-    setSaveState("지웠습니다", false);
-    toast("상담 정보를 지웠습니다");
+    toast("내용을 초기화했습니다");
   });
 
   /* ---------- 인쇄 / PDF 저장 ---------- */
@@ -1570,7 +1490,7 @@
     var d = new Date();
     var dateStr = d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate();
     var name = ($("clientName").value || "").trim();
-    $("printHead").textContent = "1분 보험료 건강검진 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
+    $("printHead").textContent = "적정 보험료 진단 결과  ·  " + dateStr + (name ? "  ·  고객 " + name : "");
   }
   window.addEventListener("beforeprint", function(){ printHeard = true; preparePrint(); });
 
@@ -1629,7 +1549,7 @@
       "_subject": "[1분 보험료 건강검진] " + name + " 고객 · " + stamp,
       "_template": "table",
       "_captcha": "false",
-      "고객 성함": name,
+      "성함": name,
       "연락처": contact,
       "상담보험": insuranceText(),
       "궁금하신 사항": questionsValue() || "(없음)",
@@ -1683,7 +1603,7 @@
       msg = "<b>월 실수령 소득</b>을 먼저 입력해 주세요. 진단 결과가 나온 뒤에 보내실 수 있습니다.";
       focusId = "income";
     } else if (!sendNameValue()){
-      msg = "<b>고객 성함</b>을 입력해 주세요.";
+      msg = "<b>성함</b>을 입력해 주세요.";
       focusId = "sendName";
     } else if (!contactValue()){
       msg = "<b>연락처</b>를 입력해 주세요. 휴대폰 번호나 카톡 ID 중 편한 쪽으로 적어 주시면 됩니다.";
@@ -1752,9 +1672,6 @@
   });
 
   /* ---------- init ---------- */
-  loadRate();
-  $("rateMinVal").textContent = state.min + "%";
-  $("rateMaxVal").textContent = state.max + "%";
   buildInsuranceChips();
   loadConsult();
   syncConsult();
